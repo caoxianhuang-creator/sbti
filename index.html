@@ -412,8 +412,10 @@ function calcType() {
 function showResult() {
   document.getElementById('question-screen').classList.remove('active');
   document.getElementById('result-screen').classList.add('active');
-  const { key, dimScores } = calcType();
-  const t = TYPES[key] || TYPES["INTFC"];
+  var result = calcType();
+  var key = result.key;
+  var dimScores = result.dimScores;
+  var t = TYPES[key] || TYPES['INTFC'];
 
   document.getElementById('resBadge').textContent = t.traits[0].t;
   document.getElementById('resName').textContent = t.name;
@@ -421,50 +423,52 @@ function showResult() {
   document.getElementById('resDesc').textContent = t.desc;
 
   // Chips
-  const chipsEl = document.getElementById('resChips');
-  chipsEl.innerHTML = t.traits.map(tr => `<span class="trait-chip" style="color:${tr.c};border-color:${tr.c}">${tr.t}</span>`).join('');
+  var chipsEl = document.getElementById('resChips');
+  var chipsHtml = '';
+  for (var i = 0; i < t.traits.length; i++) {
+    var tr = t.traits[i];
+    chipsHtml += '<span class="trait-chip" style="color:' + tr.c + ';border-color:' + tr.c + '">' + tr.t + '</span>';
+  }
+  chipsEl.innerHTML = chipsHtml;
 
-  // 15 dims (show all 8 with A/B labels)
-  const dimsGrid = document.getElementById('dimsGrid');
+  // 8 dims
+  var dimsGrid = document.getElementById('dimsGrid');
   dimsGrid.innerHTML = '';
-  DIMS.forEach((dim, i) => {
-    const score = Math.round(dimScores[i] / 6 * 100);
-    const isA = score >= 50;
-    const leftPct = isA ? score : 100 - score;
-    const rightPct = isA ? 100 - score : score;
-    const col = DIM_COLORS[i % DIM_COLORS.length];
-    dimsGrid.innerHTML += `
-      <div class="dim-item">
-        <div class="dim-name">${isA ? dim.dimA : dim.dimB}<span>${score}%</span></div>
-        <div class="dim-track"><div class="dim-fill" style="width:0%;background:${col}"></div></div>
-      </div>
-      <div class="dim-sep"></div>
-      <div class="dim-item">
-        <div class="dim-name" style="justify-content:flex-end">${isA ? dim.dimB : dim.dimA}<span>${100-score}%</span></div>
-        <div class="dim-track"><div class="dim-fill" style="width:0%;background:#333"></div></div>
-      </div>
-    `;
-  });
+  for (var di = 0; di < DIMS.length; di++) {
+    var dim = DIMS[di];
+    var score = Math.round(dimScores[di] / 6 * 100);
+    var isA = score >= 50;
+    var col = DIM_COLORS[di % DIM_COLORS.length];
+    dimsGrid.innerHTML += '<div class="dim-item"><div class="dim-name">' + (isA ? dim.dimA : dim.dimB) + '<span>' + score + '%</span></div><div class="dim-track"><div class="dim-fill" style="width:0%;background:' + col + '"></div></div></div><div class="dim-sep"></div><div class="dim-item"><div class="dim-name" style="justify-content:flex-end">' + (isA ? dim.dimB : dim.dimA) + '<span>' + (100 - score) + '%</span></div><div class="dim-track"><div class="dim-fill" style="width:0%;background:#333"></div></div></div>';
+  }
 
   // Compat
-  const compatEl = document.getElementById('compatList');
-  compatEl.innerHTML = t.compat.map(c => `
-    <div class="compat-item">
-      <span class="compat-icon">${c.icon}</span>
-      <span class="compat-type">${c.name}</span>
-      <span style="color:var(--text-dim)">${c.type}</span>
-    </div>
-  `).join('');
+  var compatEl = document.getElementById('compatList');
+  var compatHtml = '';
+  for (var ci = 0; ci < t.compat.length; ci++) {
+    var c = t.compat[ci];
+    compatHtml += '<div class="compat-item"><span class="compat-icon">' + c.icon + '</span><span class="compat-type">' + c.name + '</span><span style="color:var(--text-dim)">' + c.type + '</span></div>';
+  }
+  compatEl.innerHTML = compatHtml;
 
-  // Animate dims after a tick
-  setTimeout(() => {
-    dimsGrid.querySelectorAll('.dim-fill').forEach((el, i) => {
-      const dimIdx = Math.floor(i / 2);
-      const score = Math.round(dimScores[dimIdx] / 6 * 100);
-      const isLeft = i % 2 === 0;
-      const pct = isLeft ? (DIMS[dimIdx] ? (score >= 50 ? score : 100-score : 50) : 50) : (DIMS[Math.floor(i/2)] ? (score >= 50 ? 100-score : score) : 50);
+  // Animate dims
+  setTimeout(function() {
+    var fills = dimsGrid.querySelectorAll('.dim-fill');
+    for (var fi = 0; fi < fills.length; fi++) {
+      var el = fills[fi];
+      var dimIdx = Math.floor(fi / 2);
+      var s = Math.round(dimScores[dimIdx] / 6 * 100);
+      var isLeft = (fi % 2 === 0);
+      var pct;
+      if (isLeft) {
+        pct = (s >= 50) ? s : (100 - s);
+      } else {
+        pct = (s >= 50) ? (100 - s) : s;
+      }
+      if (pct < 0) pct = 0;
+      if (pct > 100) pct = 100;
       el.style.width = pct + '%';
-    });
+    }
   }, 100);
 }
 
