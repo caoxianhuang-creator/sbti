@@ -7,17 +7,19 @@
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #0D0D0D;
-      --card: #1A1A2E;
-      --card2: #16162A;
-      --primary: #FF2D55;
-      --secondary: #00D4FF;
+      --bg: #FFF8F0;
+      --card: #FFFFFF;
+      --card2: #FFF0E8;
+      --primary: #FF6B6B;
+      --primary-light: #FFF0F0;
+      --secondary: #00C9A7;
       --accent: #FFD93D;
-      --purple: #A855F7;
-      --green: #22C55E;
-      --text: #FFFFFF;
+      --purple: #A78BFA;
+      --orange: #FF9F43;
+      --text: #2D3436;
       --text-dim: #8B8B9A;
-      --border: #2A2A3E;
+      --border: #FFE8D6;
+      --shadow: 0 4px 24px rgba(255,107,107,0.08);
     }
     html, body { height: 100%; }
     body {
@@ -33,156 +35,156 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ===== ANIMATIONS ===== */
     @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
     @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
-    @keyframes slideIn { from { opacity:0; transform:translateX(30px); } to { opacity:1; transform:translateX(0); } }
-    @keyframes popIn { 0%{transform:scale(0.8);opacity:0} 70%{transform:scale(1.05)} 100%{transform:scale(1);opacity:1} }
-    @keyframes shimmer { 0%{background-position:-200%} 100%{background-position:200%} }
+    @keyframes slideIn { from { opacity:0; transform:translateX(24px); } to { opacity:1; transform:translateX(0); } }
+    @keyframes popIn { 0%{transform:scale(0.85);opacity:0} 70%{transform:scale(1.03)} 100%{transform:scale(1);opacity:1} }
+    @keyframes barFill { from { width:0% } }
 
-    /* ===== SHARED ===== */
     .container { width: 100%; max-width: 520px; padding: 0 20px; }
     .screen { display: none; }
     .screen.active { display: block; animation: fadeIn 0.4s ease; }
-    .pill-badge {
-      display: inline-block; padding: 4px 12px; border-radius: 20px;
-      font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
-    }
 
     /* ===== START SCREEN ===== */
-    #start-screen { text-align: center; padding: 32px 20px; animation: fadeUp 0.6s ease; }
-    .logo-row { margin-bottom: 28px; }
-    .logo-icon { font-size: 48px; margin-bottom: 12px; }
-    .logo-sub { font-size: 11px; letter-spacing: 4px; color: var(--text-dim); text-transform: uppercase; }
-    .main-title { font-size: clamp(44px, 12vw, 64px); font-weight: 900; line-height: 1; margin-bottom: 8px; }
-    .title-sbti { background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .title-year { font-size: 16px; color: var(--text-dim); font-weight: 400; }
+    #start-screen { text-align: center; padding: 40px 20px; animation: fadeUp 0.6s ease; }
+    .logo-emoji { font-size: 56px; margin-bottom: 16px; }
+    .logo-sub { font-size: 11px; letter-spacing: 4px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 20px; }
+    .main-title { font-size: clamp(48px, 14vw, 72px); font-weight: 900; line-height: 1; margin-bottom: 8px; }
+    .title-sbti {
+      background: linear-gradient(135deg, #FF6B6B, #FF9F43, #FFD93D);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-size: 200% auto;
+      animation: shimmer 3s linear infinite;
+    }
+    @keyframes shimmer { 0%{background-position:0%} 100%{background-position:200%} }
+    .title-year { font-size: 14px; color: var(--text-dim); font-weight: 400; }
     .subtitle { font-size: 15px; color: var(--text-dim); margin: 20px 0 36px; line-height: 1.7; }
     .start-btn {
-      padding: 16px 56px; background: linear-gradient(135deg, var(--primary), #FF6B8A);
+      padding: 16px 56px;
+      background: linear-gradient(135deg, #FF6B6B, #FF8E8E);
       color: white; border: none; border-radius: 50px; font-size: 16px; font-weight: 700;
       cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 4px 24px rgba(255,45,85,0.35);
+      box-shadow: 0 4px 20px rgba(255,107,107,0.3);
     }
-    .start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(255,45,85,0.5); }
+    .start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(255,107,107,0.4); }
     .start-btn:active { transform: scale(0.97); }
     .stats-row { display: flex; justify-content: center; gap: 32px; margin-top: 36px; }
     .stat-item { text-align: center; }
-    .stat-num { font-size: 22px; font-weight: 800; color: var(--secondary); }
+    .stat-num { font-size: 24px; font-weight: 800; background: linear-gradient(135deg, #FF6B6B, #FF9F43); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .stat-label { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
-    .disclaimer { margin-top: 28px; font-size: 11px; color: var(--text-dim); line-height: 1.6; }
+    .disclaimer { margin-top: 28px; font-size: 11px; color: var(--text-dim); line-height: 1.7; }
 
     /* ===== QUESTION SCREEN ===== */
-    #question-screen { padding: 24px 20px 40px; }
+    #question-screen { padding: 24px 20px 48px; }
     .q-progress { margin-bottom: 28px; }
     .q-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     .q-counter { font-size: 13px; color: var(--text-dim); }
     .q-counter span { color: var(--primary); font-weight: 700; }
-    .q-dim-label { font-size: 11px; padding: 3px 10px; border-radius: 20px; background: var(--card); color: var(--text-dim); }
-    .progress-track { width: 100%; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
-    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 2px; transition: width 0.4s ease; }
-    .q-card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 36px 24px; animation: slideIn 0.3s ease; }
-    .q-text { font-size: 19px; font-weight: 600; line-height: 1.55; margin-bottom: 28px; }
+    .q-dim-badge {
+      font-size: 11px; padding: 3px 10px; border-radius: 20px;
+      background: var(--primary-light); color: var(--primary); font-weight: 600;
+    }
+    .progress-track { width: 100%; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #FF6B6B, #FF9F43, #FFD93D);
+      border-radius: 2px; transition: width 0.4s ease;
+    }
+    .q-card { background: var(--card); border-radius: 24px; padding: 36px 24px; animation: slideIn 0.3s ease; box-shadow: var(--shadow); }
+    .q-text { font-size: 19px; font-weight: 600; line-height: 1.55; margin-bottom: 28px; color: var(--text); }
     .q-opts { display: flex; flex-direction: column; gap: 10px; }
     .q-opt {
       display: flex; align-items: center; gap: 14px;
-      padding: 16px 18px; background: var(--bg); border: 1.5px solid var(--border);
-      border-radius: 14px; color: var(--text); font-size: 14px; font-weight: 500;
+      padding: 16px 18px; background: var(--bg); border: 2px solid var(--border);
+      border-radius: 16px; color: var(--text); font-size: 14px; font-weight: 500;
       cursor: pointer; transition: border-color 0.2s, background 0.2s, transform 0.15s; text-align: left;
     }
-    .q-opt:hover { border-color: var(--primary); background: #1E1E38; transform: translateX(3px); }
+    .q-opt:hover { border-color: var(--primary); background: var(--primary-light); transform: translateX(3px); }
     .q-opt:active { transform: scale(0.98); }
     .q-opt-letter {
-      width: 30px; height: 30px; border-radius: 8px; background: var(--border);
+      width: 32px; height: 32px; border-radius: 10px;
+      background: var(--card2); color: var(--primary);
       display: flex; align-items: center; justify-content: center;
-      font-size: 13px; font-weight: 800; flex-shrink: 0; transition: background 0.2s;
+      font-size: 14px; font-weight: 800; flex-shrink: 0; transition: background 0.2s;
     }
-    .q-opt:hover .q-opt-letter { background: var(--primary); }
+    .q-opt:hover .q-opt-letter { background: var(--primary); color: white; }
 
     /* ===== RESULT SCREEN ===== */
     #result-screen { padding: 28px 20px 48px; text-align: center; animation: fadeIn 0.5s ease; }
-    .result-badge { animation: fadeUp 0.5s ease 0.1s both; }
-    .result-eyebrow { font-size: 11px; letter-spacing: 3px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 12px; }
+    .result-badge { animation: fadeUp 0.5s ease 0.05s both; margin-bottom: 8px; }
+    .result-eyebrow { font-size: 11px; letter-spacing: 3px; color: var(--text-dim); text-transform: uppercase; }
     .result-type-badge {
-      display: inline-block; padding: 8px 24px; border-radius: 16px;
-      font-size: 14px; font-weight: 900; letter-spacing: 2px;
-      background: linear-gradient(135deg, var(--primary), var(--purple));
-      margin-bottom: 8px;
+      display: inline-block; padding: 8px 20px; border-radius: 50px;
+      font-size: 13px; font-weight: 900; letter-spacing: 2px;
+      background: linear-gradient(135deg, #FF6B6B, #FF9F43); color: white; margin-bottom: 8px;
     }
     .result-main-type {
-      font-size: clamp(64px, 18vw, 88px); font-weight: 900; line-height: 1;
-      background: linear-gradient(135deg, var(--primary), var(--accent), var(--secondary));
-      background-size: 200% auto;
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      font-size: clamp(56px, 16vw, 80px); font-weight: 900; line-height: 1;
+      background: linear-gradient(135deg, #FF6B6B, #FF9F43, #FFD93D);
+      background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
       animation: shimmer 3s linear infinite; margin: 8px 0;
     }
-    .result-name { font-size: 26px; font-weight: 800; color: var(--secondary); margin-bottom: 6px; }
-    .result-tagline { font-size: 13px; color: var(--text-dim); margin-bottom: 28px; line-height: 1.6; }
-    .result-divider { width: 60px; height: 3px; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 2px; margin: 0 auto 24px; }
+    .result-name { font-size: 26px; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
+    .result-tagline { font-size: 14px; color: var(--text-dim); margin-bottom: 24px; line-height: 1.6; }
+    .result-divider { width: 60px; height: 3px; background: linear-gradient(90deg, #FF6B6B, #FFD93D); border-radius: 2px; margin: 0 auto 24px; }
 
-    /* 15 Dimensions */
-    .dims-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 20px; text-align: left; animation: fadeUp 0.5s ease 0.2s both; }
-    .dims-title { font-size: 11px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 6px; }
-    .dims-grid { display: grid; grid-template-columns: 1fr 1px 1fr; gap: 0 16px; }
-    .dim-item { margin-bottom: 14px; }
-    .dim-name { font-size: 12px; color: var(--text-dim); margin-bottom: 5px; display: flex; justify-content: space-between; }
-    .dim-name span { color: var(--text); font-weight: 600; }
-    .dim-track { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
-    .dim-fill { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
-    .dim-sep { background: var(--border); width: 1px; }
+    /* Cards */
+    .result-card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); text-align: left; animation: fadeUp 0.5s ease 0.1s both; }
+    .card-title { font-size: 13px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+    .card-title .icon { font-size: 16px; }
 
-    /* Description card */
-    .desc-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 20px; text-align: left; animation: fadeUp 0.5s ease 0.3s both; }
-    .desc-title { font-size: 13px; font-weight: 700; margin-bottom: 10px; color: var(--accent); }
-    .desc-text { font-size: 14px; color: var(--text-dim); line-height: 1.8; }
-    .trait-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    /* Traits */
+    .trait-chips { display: flex; flex-wrap: wrap; gap: 8px; }
     .trait-chip {
-      padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
-      border: 1px solid; transition: all 0.2s;
+      padding: 5px 14px; border-radius: 50px; font-size: 12px; font-weight: 600;
+      border: 1.5px solid; transition: all 0.2s;
     }
 
-    /* Compatibility */
-    .compat-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 20px; text-align: left; animation: fadeUp 0.5s ease 0.4s both; }
-    .compat-title { font-size: 13px; font-weight: 700; margin-bottom: 12px; color: var(--purple); }
-    .compat-items { display: flex; flex-direction: column; gap: 8px; }
-    .compat-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-dim); }
-    .compat-icon { font-size: 16px; }
-    .compat-type { font-weight: 800; color: var(--text); }
+    /* Career */
+    .career-list { display: flex; flex-direction: column; gap: 8px; }
+    .career-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 14px; background: var(--bg); border-radius: 12px;
+      font-size: 13px; color: var(--text);
+    }
+    .career-item .c-icon { font-size: 18px; flex-shrink: 0; }
+    .career-item .c-name { font-weight: 600; }
+    .career-item .c-reason { color: var(--text-dim); font-size: 12px; }
 
     /* Share */
     .share-btn {
-      width: 100%; padding: 16px; background: linear-gradient(135deg, var(--secondary), #0099CC);
+      width: 100%; padding: 16px;
+      background: linear-gradient(135deg, #00C9A7, #00E5C4);
       color: white; border: none; border-radius: 16px; font-size: 15px; font-weight: 700;
       cursor: pointer; transition: transform 0.15s, box-shadow 0.2s;
-      box-shadow: 0 4px 20px rgba(0,212,255,0.25); margin-bottom: 10px;
+      box-shadow: 0 4px 16px rgba(0,201,167,0.25); margin-bottom: 10px;
     }
-    .share-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0,212,255,0.4); }
+    .share-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,201,167,0.35); }
     .replay-btn {
       width: 100%; padding: 14px; background: transparent; color: var(--text-dim);
-      border: 1px solid var(--border); border-radius: 16px; font-size: 14px;
+      border: 1.5px solid var(--border); border-radius: 16px; font-size: 14px;
       cursor: pointer; transition: border-color 0.2s, color 0.2s; margin-bottom: 24px;
     }
-    .replay-btn:hover { border-color: var(--text-dim); color: var(--text); }
-    .result-footer { font-size: 11px; color: var(--text-dim); line-height: 1.7; }
+    .replay-btn:hover { border-color: var(--primary); color: var(--primary); }
+    .result-footer { font-size: 11px; color: var(--text-dim); line-height: 1.8; text-align: center; }
 
-    @media (max-width: 380px) {
-      .dims-grid { grid-template-columns: 1fr; gap: 0; }
-      .dim-sep { display: none; }
+    /* Responsive */
+    @media (max-width: 400px) {
+      .stats-row { gap: 20px; }
+      .stat-num { font-size: 20px; }
     }
   </style>
 </head>
 <body>
 
-<!-- ===== START SCREEN ===== -->
+<!-- START -->
 <div id="start-screen" class="screen active">
   <div class="container">
-    <div class="logo-row">
-      <div class="logo-icon">🤖</div>
-      <div class="logo-sub">// 赛博人格测试 //</div>
-    </div>
+    <div class="logo-emoji">🎭</div>
+    <div class="logo-sub">// 赛博人格测试 //</div>
     <div class="main-title">
       <div class="title-sbti">SBTI</div>
-      <div class="title-year">2026</div>
+      <div class="title-year">2026 网络版</div>
     </div>
     <div class="subtitle">
       30道题 · 32种人格 · 互联网嘴替大赏<br>
@@ -192,19 +194,19 @@
     <div class="stats-row">
       <div class="stat-item"><div class="stat-num">32</div><div class="stat-label">种人格类型</div></div>
       <div class="stat-item"><div class="stat-num">30</div><div class="stat-label">道精选题</div></div>
-      <div class="stat-item"><div class="stat-num">15</div><div class="stat-label">维度分析</div></div>
+      <div class="stat-item"><div class="stat-num">8+</div><div class="stat-label">职业推荐</div></div>
     </div>
     <div class="disclaimer">测试结果纯属娱乐 · 请勿当真 · 认真你就输了<br>本测试原型来自 B站@蛆肉儿串儿</div>
   </div>
 </div>
 
-<!-- ===== QUESTION SCREEN ===== -->
+<!-- QUESTION -->
 <div id="question-screen" class="screen">
   <div class="container">
     <div class="q-progress">
       <div class="q-top">
         <div class="q-counter"><span id="qNum">1</span> / 30</div>
-        <div class="q-dim-label" id="dimLabel">能量来源</div>
+        <div class="q-dim-badge" id="dimLabel">能量来源</div>
       </div>
       <div class="progress-track"><div class="progress-fill" id="progFill" style="width:3.33%"></div></div>
     </div>
@@ -215,7 +217,7 @@
   </div>
 </div>
 
-<!-- ===== RESULT SCREEN ===== -->
+<!-- RESULT -->
 <div id="result-screen" class="screen">
   <div class="container">
     <div class="result-badge">
@@ -226,26 +228,25 @@
     <div class="result-tagline" id="resTagline">说做就做，不负当下</div>
     <div class="result-divider"></div>
 
-    <div class="dims-card">
-      <div class="dims-title">📊 十五维度（伪）</div>
-      <div class="dims-grid" id="dimsGrid"></div>
-    </div>
-
-    <div class="desc-card">
-      <div class="desc-title">📝 人格解读</div>
-      <div class="desc-text" id="resDesc"></div>
+    <div class="result-card" id="traitCard">
+      <div class="card-title"><span class="icon">🏷️</span> 特质标签</div>
       <div class="trait-chips" id="resChips"></div>
     </div>
 
-    <div class="compat-card">
-      <div class="compat-title">💞 速配人格</div>
-      <div class="compat-items" id="compatList"></div>
+    <div class="result-card" id="descCard">
+      <div class="card-title"><span class="icon">📝</span> 人格解读</div>
+      <div class="desc-text" id="resDesc" style="font-size:14px;color:var(--text-dim);line-height:1.9"></div>
+    </div>
+
+    <div class="result-card" id="careerCard">
+      <div class="card-title"><span class="icon">💼</span> 职业发展建议</div>
+      <div class="career-list" id="careerList"></div>
     </div>
 
     <button class="share-btn" id="shareBtn">📤 复制结果发给好友</button>
     <button class="replay-btn" id="replayBtn">↻ 再测一次</button>
     <div class="result-footer">
-      本测试仅供娱乐 · 认真你就输了<br>
+      本测试仅供娱乐 · 请勿当真 · 认真你就输了<br>
       欢迎分享给冤种朋友们 · @蛆肉儿串儿
     </div>
   </div>
@@ -253,54 +254,42 @@
 
 <script>
 // ===== DIMENSIONS =====
-const DIMS = [
-  { name: '能量来源', dimA: '输出型 E', dimB: '囤积型 I', letter: 'EI' },
-  { name: '信息获取', dimA: '观察者 S', dimB: '直觉者 N', letter: 'SN' },
-  { name: '决策方式', dimA: '理性派 T', dimB: '感觉派 F', letter: 'TF' },
-  { name: '生活态度', dimA: '计划派 J', dimB: '随性派 P', letter: 'JP' },
-  { name: '应对姿态', dimA: '硬刚型 A', dimB: '摆烂型 C', letter: 'AC' },
-  { name: '社交模式', dimA: '社牛 S', dimB: '社恐 N', letter: 'SN2' },
-  { name: '情绪底色', dimA: '乐观派 O', dimB: '焦虑派 A', letter: 'OA' },
-  { name: '成就导向', dimA: '卷王 H', dimB: '躺平 L', letter: 'HL' },
+var DIMS = [
+  { name: '能量来源', dimA: '输出型 E', dimB: '囤积型 I' },
+  { name: '信息获取', dimA: '观察者 S', dimB: '直觉者 N' },
+  { name: '决策方式', dimA: '理性派 T', dimB: '感觉派 F' },
+  { name: '生活态度', dimA: '计划派 J', dimB: '随性派 P' },
+  { name: '应对姿态', dimA: '硬刚型 A', dimB: '摆烂型 C' },
 ];
 
-const DIM_COLORS = ['#FF2D55','#00D4FF','#FFD93D','#A855F7','#22C55E','#FF9F1C','#EC4899','#0EA5E9'];
+var DIM_COLORS = ['#FF6B6B','#FF9F43','#FFD93D','#A78BFA','#00C9A7'];
 
 // ===== QUESTIONS =====
-const QS = [
-  // D0: EI - 能量来源
+var QS = [
   { d:0, q:"周末你通常在干嘛？", a:[{l:"A",t:"出门浪，见人，充电"},{l:"B",t:"在家躺着，哪也不去"}] },
   { d:0, q:"聊天时你是先打字还是等对方回？", a:[{l:"A",t:"我先开口，主动破冰"},{l:"B",t:"等对方先说，我再接"}] },
   { d:0, q:"一个人待久了你会？", a:[{l:"A",t:"想出门找点事做"},{l:"B",t:"享受独处的快乐"}] },
   { d:0, q:"在聚会上你通常是？", a:[{l:"A",t:"气氛发动机，大家围着我转"},{l:"B",t:"角落里默默观察的存在"}] },
   { d:0, q:"你的工作动力主要来自？", a:[{l:"A",t:"跟人互动碰撞出火花"},{l:"B",t:"一个人安静思考的满足感"}] },
   { d:0, q:"说到「周末计划」，你更常的状态是？", a:[{l:"A",t:"已经约了一堆人"},{l:"B",t:"还没想好，看心情"}] },
-
-  // D1: SN - 信息获取
   { d:1, q:"你看人主要看什么？", a:[{l:"A",t:"做了什么事，说了什么话"},{l:"B",t:"感觉和气场，直觉告诉我TA是怎样的人"}] },
   { d:1, q:"你更关注？", a:[{l:"A",t:"眼前的实际细节"},{l:"B",t:"未来的可能性和想象"}] },
   { d:1, q:"老板布置任务时你更想了解？", a:[{l:"A",t:"具体的执行步骤和时间节点"},{l:"B",t:"为什么做这件事，意义是什么"}] },
   { d:1, q:"面对一个新项目你的开场是？", a:[{l:"A",t:"先研究现有资料和案例"},{l:"B",t:"先想象它做成了会是什么样"}] },
   { d:1, q:"朋友跟你抱怨事情，你更常的反应是？", a:[{l:"A",t:"给具体的解决方案"},{l:"B",t:"理解情绪，共情TA的不爽"}] },
   { d:1, q:"你喜欢什么样的内容？", a:[{l:"A",t:"实操干货，有步骤有方法"},{l:"B",t:"有深度的分析和洞察"}] },
-
-  // D2: TF - 决策方式
   { d:2, q:"你更看重？", a:[{l:"A",t:"这件事是不是合理、说得通"},{l:"B",t:"大家的感受和氛围怎么样"}] },
   { d:2, q:"发生冲突时你倾向于？", a:[{l:"A",t:"先讲道理，分清对错"},{l:"B",t:"先照顾情绪，回头再算账"}] },
   { d:2, q:"你更愿意被形容为？", a:[{l:"A",t:"理性、冷静、有逻辑"},{l:"B",t:"温暖、善解人意、有同理心"}] },
   { d:2, q:"做决定时你会？", a:[{l:"A",t:"分析利弊，客观评估"},{l:"B",t:"考虑人的感受，哪个更让大家好受"}] },
   { d:2, q:"你更认可的成功是？", a:[{l:"A",t:"解决了多少问题，创造了多少价值"},{l:"B",t:"影响了多少人，带来了多少温暖"}] },
   { d:2, q:"当朋友问「我该怎么办」时你通常？", a:[{l:"A",t:"给出最优解和执行路径"},{l:"B",t:"陪伴倾听，让他自己想清楚"}] },
-
-  // D3: JP - 生活态度
   { d:3, q:"你的办公桌通常是什么状态？", a:[{l:"A",t:"整齐有序，什么都在该在的位置"},{l:"B",t:"乱中有序，我知道我的东西在哪"}] },
   { d:3, q:"出门前你通常会？", a:[{l:"A",t:"提前计划好一切，可能还做了预案"},{l:"B",t:"看情况，到时候再说"}] },
   { d:3, q:"你更接近哪种工作风格？", a:[{l:"A",t:"提前列好清单，一件一件打勾完成"},{l:"B",t:"喜欢多线程推进，弹性工作"}] },
   { d:3, q:"你对「最后期限」的看法是？", a:[{l:"A",t:"提前完成，不能拖到最后一秒"},{l:"B",t:"最后一天才是生产力巅峰"}] },
   { d:3, q:"周一早上你的状态？", a:[{l:"A",t:"斗志满满，列好本周计划"},{l:"B",t:"能呼吸就不错了，边走边看"}] },
   { d:3, q:"旅行时你更喜欢？", a:[{l:"A",t:"攻略详细，行程满满"},{l:"B",t:"睡到自然醒，随性漫游"}] },
-
-  // D4: AC - 应对姿态
   { d:4, q:"遇到麻烦你第一反应是？", a:[{l:"A",t:"正面刚，马上解决"},{l:"B",t:"先放一放，说不定自己就好了"}] },
   { d:4, q:"别人对你的评价通常是？", a:[{l:"A",t:"靠谱、能扛事、硬核"},{l:"B",t:"随和、不计较、心大"}] },
   { d:4, q:"面对困难的任务你的态度是？", a:[{l:"A",t:"迎难而上，搞不定不罢休"},{l:"B",t:"差不多就行了，不必太较真"}] },
@@ -310,48 +299,48 @@ const QS = [
 ];
 
 // ===== 32 TYPES =====
-const TYPES = {
-  "ESTPA": { name:"卷王",      tagline:"永不停歇的卷王本王", desc:"你是朋友圈里的发电机。别人休息你在卷，别人睡觉你还在卷。卷是你的本能，不卷才是异常。你是那种让同事感到压力的卷王（褒义）。", traits:[{t:"卷王",c:"#FF2D55"},{t:"行动派",c:"#00D4FF"},{t:"高目标",c:"#FFD93D"},{t:"不服输",c:"#A855F7"}], compat:[{icon:"💀",name:"摆烂侠",type:"ISTFC"},{icon:"🎭",name:"小丑",type:"ENNFC"}], dimScores:[85,40,70,80,95,75,55,90] },
-  "ESTPC": { name:"硬刚王",    tagline:"遇到困难直接上", desc:"遇到困难直接上，从不绕路。管你是谁，管你什么规则，硬刚到底。输赢不重要，气势不能输。你是那种让人又敬又怕的存在。", traits:[{t:"硬刚",c:"#FF2D55"},{t:"不妥协",c:"#EC4899"},{t:"战斗欲",c:"#EF4444"},{t:"强势",c:"#DC2626"}], compat:[{icon:"🧘",name:"佛系",type:"INFLC"},{icon:"🤝",name:"配合型",type:"ISFTC"}], dimScores:[80,35,75,85,90,65,30,75] },
-  "ESTFA": { name:"乐观牛",    tagline:"负面新闻当没看见", desc:"负面新闻？国际局势？别看了影响心情。你是朋友圈的阳光，空气净化器本人。跟你待久了会变傻，傻得很开心那种。", traits:[{t:"乐观",c:"#FFD93D"},{t:"正能量",c:"#22C55E"},{t:"治愈系",c:"#14B8A6"},{t:"心大",c:"#10B981"}], compat:[{icon:"🥲",name:"焦虑怪",type:"INTFA"},{icon:"😶",name:"淡定王",type:"INFLC"}], dimScores:[75,30,20,65,30,85,90,45] },
-  "ESTFC": { name:"自由人",    tagline:"卷了这么久，该休息了", desc:"卷了这么久，该休息了。躺平是人生哲学，放过自己才是第一要务。你的格言：差不多就行了，何必那么累。", traits:[{t:"躺平",c:"#6366F1"},{t:"反内卷",c:"#8B5CF6"},{t:"自洽",c:"#7C3AED"},{t:"松弛感",c:"#A855F7"}], compat:[{icon:"🔥",name:"卷王",type:"ESTPA"},{icon:"⚡",name:"硬刚型",type:"ESTPC"}], dimScores:[70,25,15,20,20,80,85,20] },
-  "ESNPA": { name:"社牛卷王",  tagline:"人脉就是钱脉", desc:"人脉就是钱脉，你深谙此道。吃饭要拍照，拍照要发圈，发圈要@人。卷和社交两不误，卷王中的战斗机。", traits:[{t:"社牛",c:"#FF9F1C"},{t:"卷王",c:"#FF2D55"},{t:"人脉王",c:"#F59E0B"},{t:"控场",c:"#EF4444"}], compat:[{icon:"🦊",name:"独狼",type:"EITPA"},{icon:"🤡",name:"小丑",type:"ESNFC"}], dimScores:[90,45,60,70,85,95,50,85] },
-  "ESNPC": { name:"社牛战士",  tagline:"既能聊又能刚", desc:"既能聊又能刚，你是人群中的亮点。硬刚 + 社交牛杂质的结合体，所到之处，皆是战场也是秀场。", traits:[{t:"社牛",c:"#FF9F1C"},{t:"硬刚",c:"#FF2D55"},{t:"表达力",c:"#E91E8C"},{t:"控场",c:"#EC4899"}], compat:[{icon:"🦉",name:"独行侠",type:"EITFC"},{icon:"🧊",name:"冷面刚",type:"ISNPC"}], dimScores:[88,40,65,75,92,90,35,78] },
-  "ESNFA": { name:"开心果",    tagline:"气氛组组长", desc:"你是气氛组组长，乐观能量发射器。跟你待久了会变傻，傻得很开心那种。社交牛杂+乐观怪属性拉满。", traits:[{t:"开心果",c:"#FF69B4"},{t:"社牛",c:"#FF9F1C"},{t:"乐观",c:"#FFD93D"},{t:"感染力",c:"#22C55E"}], compat:[{icon:"🥲",name:"悲观派",type:"INTFC"},{icon:"🤐",name:"社恐",type:"ISNFC"}], dimScores:[85,35,18,55,25,92,95,40] },
-  "ESNFC": { name:"躺平社牛",  tagline:"社交满分，躺平至上", desc:"社交满分，躺平至上。能不出门绝不出门，能躺着绝不坐着。但一个电话来，你又在派对了。你是矛盾的综合体，但自洽得很。", traits:[{t:"社牛",c:"#FF9F1C"},{t:"躺平",c:"#6366F1"},{t:"反差感",c:"#00BCD4"},{t:"自洽",c:"#7C3AED"}], compat:[{icon:"🌀",name:"卷王",type:"ESTPA"},{icon:"🎭",name:"表演型",type:"ESNFA"}], dimScores:[82,30,12,15,18,93,88,15] },
-  "EITPA": { name:"独狼卷",    tagline:"一个人卷，安静地卷", desc:"一个人卷，安静地卷。你不需要观众，卷是为了自己。孤独是你最好的充电方式，沉默是你最强的武器。", traits:[{t:"独狼",c:"#8B5CF6"},{t:"内卷",c:"#A855F7"},{t:"专注",c:"#6366F1"},{t:"独立",c:"#7C3AED"}], compat:[{icon:"🎉",name:"热闹型",type:"ESNFA"},{icon:"🤝",name:"配合型",type:"ISFTC"}], dimScores:[25,70,68,75,88,20,50,92] },
-  "EITPC": { name:"硬刚独狼",  tagline:"不需要队友", desc:"不需要队友，不需要建议。遇到问题一个人扛，扛不住就硬刚。你是孤岛上的战斗机，独立自主的代名词。", traits:[{t:"独狼",c:"#8B5CF6"},{t:"硬刚",c:"#FF2D55"},{t:"独立",c:"#6366F1"},{t:"固执",c:"#DC2626"}], compat:[{icon:"🦋",name:"温柔型",type:"ISNFA"},{icon:"🧘",name:"佛系",type:"INFLC"}], dimScores:[22,65,72,82,94,15,28,88] },
-  "EITFA": { name:"独行乐",    tagline:"一个人也能很开心", desc:"一个人也能很开心？你就是答案。不依赖外界，自身就是快乐源泉。独处时你最强大，也最自在。", traits:[{t:"独行",c:"#10B981"},{t:"自洽",c:"#22C55E"},{t:"独立",c:"#06B6D4"},{t:"自由",c:"#14B8A6"}], compat:[{icon:"🦋",name:"蝴蝶型",type:"ISNFA"},{icon:"☀️",name:"阳光型",type:"ESNFA"}], dimScores:[20,68,22,70,30,18,85,60] },
-  "EITFC": { name:"独行侠",    tagline:"低质量社交不如没有", desc:"低质量社交不如没有，你信奉精英社交。朋友不在多，在于懂你。你是独行侠，大隐隐于市的那种。", traits:[{t:"独行",c:"#8B5CF6"},{t:"高冷",c:"#6366F1"},{t:"精英社交",c:"#7C3AED"},{t:"挑剔",c:"#A855F7"}], compat:[{icon:"🎉",name:"E人",type:"ESNPA"},{icon:"🤝",name:"SHI",type:"ISFTC"}], dimScores:[18,72,65,78,75,12,65,72] },
-  "ENNPA": { name:"社交元人",  tagline:"人设包装大师", desc:"人设包装大师，朋友圈经营专家。你的每条动态都是精心策划，每张照片都价值连城。影响力是你追求的货币。", traits:[{t:"大V",c:"#F59E0B"},{t:"人设",c:"#FF9F1C"},{t:"影响力",c:"#EF4444"},{t:"表演",c:"#E91E8C"}], compat:[{icon:"🦇",name:"独行型",type:"EITFC"},{icon:"👁️",name:"观察型",type:"INTFC"}], dimScores:[92,55,55,60,70,95,45,65] },
-  "ENNPC": { name:"键盘侠",    tagline:"网上重拳出击", desc:"网上重拳出击，线下岁月静好。你的键盘是你的武器，你的屏幕是你的战场。义正言辞是你战斗的姿态。", traits:[{t:"键盘侠",c:"#B91C1C"},{t:"键政",c:"#EF4444"},{t:"战斗欲",c:"#DC2626"},{t:"线下静",c:"#7C3AED"}], compat:[{icon:"🤝",name:"和事佬",type:"ESNFC"},{icon:"🧊",name:"冷面型",type:"EITPC"}], dimScores:[60,75,80,55,95,70,25,70] },
-  "ENNFA": { name:"社牛乐观",  tagline:"永远正能量", desc:"永远正能量，永远笑嘻嘻。悲观这种情绪跟你没关系，天塌下来有乐观顶着，你是朋友圈的人形暖宝宝。", traits:[{t:"乐观",c:"#FFD93D"},{t:"社牛",c:"#FF9F1C"},{t:"正能量",c:"#22C55E"},{t:"温暖",c:"#14B8A6"}], compat:[{icon:"🖤",name:"丧系",type:"INTFC"},{icon:"🦇",name:"暗黑型",type:"ENNPC"}], dimScores:[90,40,15,45,20,95,98,35] },
-  "ENNFC": { name:"人间清醒",  tagline:"社交懒，低欲望", desc:"社交懒，低欲望，看透一切。你的心态稳如老狗，不争不抢不焦虑。人间清醒就是你的人生标签。", traits:[{t:"清醒",c:"#64748B"},{t:"淡定",c:"#475569"},{t:"低欲望",c:"#6366F1"},{t:"通透",c:"#8B5CF6"}], compat:[{icon:"⚡",name:"战斗型",type:"ENNPC"},{icon:"🔥",name:"卷王型",type:"ESTPA"}], dimScores:[55,80,60,25,35,60,92,30] },
-  "ISTPA": { name:"老黄牛",    tagline:"埋头干活不说话", desc:"埋头干活不说话，卷是默默卷。你不求关注，只求结果。别人不知道你在卷，但成果说明一切。", traits:[{t:"老黄牛",c:"#84CC16"},{t:"靠谱",c:"#22C55E"},{t:"低调",c:"#0EA5E9"},{t:"执行强",c:"#14B8A6"}], compat:[{icon:"🦄",name:"理想型",type:"INTFA"},{icon:"🎭",name:"舞台型",type:"ENNPA"}], dimScores:[15,60,65,88,85,20,55,90] },
-  "ISTPC": { name:"守望者",    tagline:"默默守护稳稳输出", desc:"默默守护稳稳输出，你是那个永远靠谱的人。不说硬话，不做软事，但关键时刻从不缺席。", traits:[{t:"守护",c:"#0EA5E9"},{t:"靠谱",c:"#22C55E"},{t:"稳定",c:"#06B6D4"},{t:"低调",c:"#14B8A6"}], compat:[{icon:"🦋",name:"自由型",type:"EITFA"},{icon:"☀️",name:"阳光型",type:"ESNFA"}], dimScores:[12,58,68,90,88,15,48,85] },
-  "ISTFA": { name:"内卷乐",    tagline:"卷并快乐着", desc:"卷并快乐着，这是你的超能力。别人卷是痛苦，你卷是享受。你是那种让同事感到压力的卷王（褒义）。", traits:[{t:"内卷",c:"#84CC16"},{t:"快乐",c:"#22C55E"},{t:"自驱",c:"#10B981"},{t:"高效",c:"#0EA5E9"}], compat:[{icon:"🧊",name:"淡定型",type:"INFLC"},{icon:"🦇",name:"暗黑型",type:"ENNPC"}], dimScores:[18,55,20,85,80,22,82,88] },
-  "ISTFC": { name:"独行躺王",  tagline:"表面躺实际卷", desc:"表面躺实际卷，你是隐藏王者。看起来与世无争，背地里疯狂努力。你是卷王中的伪装者。", traits:[{t:"伪装",c:"#7C3AED"},{t:"躺王",c:"#6366F1"},{t:"隐藏卷",c:"#8B5CF6"},{t:"反差",c:"#A855F7"}], compat:[{icon:"🔥",name:"战斗型",type:"ESTPC"},{icon:"🤝",name:"SHI",type:"ENNPC"}], dimScores:[15,50,15,20,75,18,75,85] },
-  "ISNPA": { name:"策划人",    tagline:"暗中观察谋划一切", desc:"暗中观察谋划一切，你是朋友圈的军师。不出手则已，出手就是王炸。思想是你最锋利的武器。", traits:[{t:"策划",c:"#F97316"},{t:"谋士",c:"#EA580C"},{t:"洞察",c:"#DC2626"},{t:"幕后",c:"#9333EA"}], compat:[{icon:"🎯",name:"执行型",type:"ISTPA"},{icon:"🤝",name:"配合型",type:"ESNPC"}], dimScores:[20,88,62,75,72,25,55,70] },
-  "ISNPC": { name:"冷面刚",    tagline:"社恐但硬刚", desc:"社恐但硬刚，不鸣则已一鸣惊人。你不是不会社交，只是不想社交。真到关键时刻，你是那个站出来的人。", traits:[{t:"冷面",c:"#1D4ED8"},{t:"硬刚",c:"#2563EB"},{t:"社恐",c:"#3B82F6"},{t:"关键时刻",c:"#DC2626"}], compat:[{icon:"🔥",name:"热情型",type:"ESNPC"},{icon:"🦋",name:"温柔型",type:"ISNFA"}], dimScores:[15,78,75,80,92,10,35,80] },
-  "ISNFA": { name:"独处达人",  tagline:"独处且快乐", desc:"独处且快乐，孤独是你的好朋友。一个人吃饭旅行到处走停停，你是自己最好的陪伴。", traits:[{t:"独处",c:"#06B6D4"},{t:"自洽",c:"#14B8A6"},{t:"自由",c:"#10B981"},{t:"独立",c:"#22C55E"}], compat:[{icon:"🦄",name:"合群型",type:"ESNFA"},{icon:"🎭",name:"舞台型",type:"ENNPA"}], dimScores:[10,72,18,65,25,8,90,55] },
-  "INFLC": { name:"淡定王者",  tagline:"什么都与我无关", desc:"什么都与我无关，你是最淡定的人。大事小事在你眼里都是小事，天塌不塌先看有没有砸到我。", traits:[{t:"淡定",c:"#475569"},{t:"冷漠",c:"#64748B"},{t:"稳定",c:"#6366F1"},{t:"抽离",c:"#7C3AED"}], compat:[{icon:"🔥",name:"战斗型",type:"ESTPC"},{icon:"🤝",name:"热情型",type:"ESNPC"}], dimScores:[8,82,55,18,15,5,88,25] },
-  "INTPA": { name:"卷神",      tagline:"最高级的卷", desc:"最高级的卷，卷到无怨无悔。你是那种让猎头都头疼的人才，因为没有合适的职位能跟上你的节奏。", traits:[{t:"卷神",c:"#DC2626"},{t:"极致",c:"#EF4444"},{t:"高目标",c:"#F59E0B"},{t:"自驱",c:"#FF2D55"}], compat:[{icon:"🧘",name:"佛系型",type:"ISTFC"},{icon:"🦋",name:"躺平型",type:"ESNFC"}], dimScores:[20,75,70,90,85,18,40,98] },
-  "INTPC": { name:"思想钢印",  tagline:"我认为对的就是对的", desc:"我认为对的就是对的，这是你的信条。信念坚定不动摇，你是行走的价值观，所见之处皆是你的领地。", traits:[{t:"固执",c:"#9333EA"},{t:"信念",c:"#A855F7"},{t:"坚定",c:"#7C3AED"},{t:"原则",c:"#6366F1"}], compat:[{icon:"🤝",name:"灵活型",type:"ESNFC"},{icon:"🎭",name:"适应型",type:"ESNFA"}], dimScores:[18,80,82,88,90,12,22,82] },
-  "INTFA": { name:"理想主义者",tagline:"内心戏很多", desc:"内心戏很多，理想很丰满。你活在自己构建的完美世界里，并为此默默努力。理想主义是你的翅膀。", traits:[{t:"理想",c:"#0D9488"},{t:"内戏",c:"#06B6D4"},{t:"浪漫",c:"#14B8A6"},{t:"纯粹",c:"#22C55E"}], compat:[{icon:"😶",name:"现实型",c:"ISTPC"},{icon:"💀",name:"落地型",c:"ISTFC"}], dimScores:[22,90,20,70,40,22,88,55] },
-  "INTFC": { name:"摆烂大师",  tagline:"想卷但躺着更舒服", desc:"想卷但躺着更舒服，这是你的人生。明日复明日，明日还明日。你是摆烂界的大师，领军人物。", traits:[{t:"摆烂",c:"#78716C"},{t:"拖延",c:"#A8A29E"},{t:"自洽",c:"#57534E"},{t:"淡定",c:"#78716C"}], compat:[{icon:"⚡",name:"行动型",type:"ESTPA"},{icon:"🔥",name:"战斗型",type:"ESTPC"}], dimScores:[20,70,18,10,12,25,80,20] },
-  "INNPA": { name:"大V",       tagline:"影响力玩家", desc:"影响力玩家，粉丝就是力量。你深谙传播之道，每一条内容都是精心计算。网红经济，你是最认真的玩家。", traits:[{t:"大V",c:"#DB2777"},{t:"影响力",c:"#E91E8C"},{t:"网红",c:"#F472B6"},{t:"流量",c:"#FB7185"}], compat:[{icon:"🦇",name:"低调型",type:"EITFC"},{icon:"🤐",name:"社恐型",type:"ISNFC"}], dimScores:[65,85,50,45,65,70,55,60] },
-  "INNPC": { name:"互联网嘴替",tagline:"你想说的正是大家想说的", desc:"专业嘴替，你想说的正是大家想说而不敢说的。你的评论区永远比正文精彩，你是互联网嘴替第一人。", traits:[{t:"嘴替",c:"#9D174D"},{t:"敢说",c:"#BE185D"},{t:"尖锐",c:"#DB2777"},{t:"真实",c:"#E91E8C"}], compat:[{icon:"🧊",name:"冷面型",c:"ISNPC"},{icon:"🤝",name:"和事型",c:"ESNFC"}], dimScores:[45,88,75,40,88,55,35,55] },
-  "INNFA": { name:"彩虹屁",    tagline:"自我感觉超级好", desc:"自我感觉超级好，你是自己的第一粉丝。自信爆棚的你，每一天都在给自己打气。自信是最好的医美。", traits:[{t:"自信",c:"#EA580C"},{t:"彩虹屁",c:"#F97316"},{t:"自恋",c:"#FB923C"},{t:"乐观",c:"#FDBA74"}], compat:[{icon:"🥲",name:"自卑型",c:"INTFC"},{icon:"🤐",name:"社恐型",c:"ISNFC"}], dimScores:[60,72,10,50,15,65,95,40] },
-  "INNFC": { name:"互联网隐士",tagline:"我不想理你", desc:"我不想理你，也不想跟你解释。低质量社交是我最讨厌的事。你是互联网里的隐士，爱看不看。", traits:[{t:"隐士",c:"#475569"},{t:"高冷",c:"#64748B"},{t:"独立",c:"#6B7280"},{t:"淡漠",c:"#9CA3AF"}], compat:[{icon:"🔥",name:"战斗型",type:"ENNPC"},{icon:"🤝",name:"热情型",type:"ESNPC"}], dimScores:[12,90,58,8,10,5,75,15] },
+var TYPES = {
+  "ESTPA": { name:"卷王", tagline:"永不停歇的卷王本王", desc:"你是朋友圈里的发动机。别人休息你在卷，别人睡觉你还在卷。卷是你的本能，不卷才是异常。你是那种让同事感到压力的卷王（褒义），也是团队里永远可以依靠的存在。你的动力源源不断，效率奇高，是天生的工作狂人。但记得偶尔也要停下来，毕竟身体是革命的本钱。你的行动力是你最大的武器，也是最容易让你透支的原因。在感情中，你可能也会不自觉地用「完成任务」的方式来表达关心，容易忽略对方的情感需求。建议学会放慢脚步，享受过程而非只盯着结果。", traits:[{t:"卷王",c:"#FF6B6B"},{t:"行动派",c:"#FF9F43"},{t:"高目标",c:"#FFD93D"},{t:"高效",c:"#A78BFA"}], careers:[{icon:"💻",name:"产品经理",reason:"统筹全局，卷到极致"},{icon:"📊",name:"数据分析师",reason:"擅长量化，逻辑清晰"},{icon:"🎯",name:"创业者",reason:"All in全压，不留退路"},{icon:"🏋️",name:"销售总监",reason:"战斗状态永不掉线"},{icon:"📈",name:"投资经理",reason:"高压力高回报匹配你的节奏"}] },
+  "ESTPC": { name:"硬刚王", tagline:"遇到困难直接上", desc:"遇到困难直接上，从不绕路。管你是谁，管你什么规则，硬刚到底。输赢不重要，气势不能输。你是那种让人又敬又怕的存在。在职场中，你是那个永远敢于对不公说「不」的人，你的勇气和魄力是稀缺的品质。但有时候太过刚硬会让自己四面树敌，学会在坚持原则和灵活变通之间找到平衡点，是你的必修课。你对自己要求极高，对别人也一样，这种标准让你们团队的上限很高，但人际关系可能需要多花心思维护。在感情里，你是那个护短到底的人，但表达方式可能过于直接，别让刀子嘴豆腐心伤了真正在乎你的人。", traits:[{t:"硬刚",c:"#FF6B6B"},{t:"不妥协",c:"#E74C3C"},{t:"战斗欲",c:"#FF9F43"},{t:"强势",c:"#C0392B"}], careers:[{icon:"⚖️",name:"律师",reason:"硬刚到底，不服来辩"},{icon:"🏛️",name:"公务员/监察",reason:"监督执行，刚正不阿"},{icon:"🛡️",name:"安保/法务",reason:"守护规则，寸步不让"},{icon:"📣",name:"公关负责人",reason:"硬气应对危机公关"},{icon:"👔",name:"职业经理人",reason:"强势管理，推动变革"}] },
+  "ESTFA": { name:"乐观牛", tagline:"负面新闻当没看见", desc:"负面新闻？国际局势？别看了影响心情。你是朋友圈的阳光，空气净化器本人。跟你待久了会变傻，傻得很开心那种。你的乐观不是盲目，而是选择性地忽略那些无法改变的坏消息，专注于自己能控制的部分。这种能力在如今这个充满焦虑的时代是极其稀缺的天赋。你是朋友圈里的情绪稳定器，朋友有烦恼第一个想到你。但要注意，你的乐观有时会变成逃避问题的借口——不是所有事情都可以靠「想开点」解决，适当的时候也要正视压力和负面情绪。在感情中你是天生的开心果，但也别忽略了对方偶尔需要的「被认真倾听」。", traits:[{t:"乐观",c:"#FFD93D"},{t:"正能量",c:"#F39C12"},{t:"治愈系",c:"#00C9A7"},{t:"心大",c:"#27AE60"}], careers:[{icon:"🎨",name:"创意策划",reason:"点子多，乐观催生创造力"},{icon:"🌱",name:"品牌运营",reason:"传递温暖正向的品牌调性"},{icon:"🎓",name:"培训师/讲师",reason:"激励他人，乐观感染学员"},{icon:"☀️",name:"内容创作者",reason:"自媒体时代的阳光博主"},{icon:"🤝",name:"HR/员工关系",reason:"团队氛围的润滑剂"}] },
+  "ESTFC": { name:"自由人", tagline:"卷了这么久，该休息了", desc:"卷了这么久，该休息了。躺平是人生哲学，放过自己才是第一要务。你的格言：差不多就行了，何必那么累。你不是真的懒，而是看透了内卷的本质选择主动退出竞争。这是一种很难得的自我觉醒，也是需要勇气的选择。你的生活方式可能是很多人羡慕但又不敢尝试的——敢于不被社会时钟推着走，本身就是一种成功。但要小心，躺平也需要资本，适当的储备和规划还是必要的。你是朋友中心态最好的那个，但也别让「无所谓」变成了对所有事情的漠不关心。在感情中你的随和让你们相处很轻松，但要记得有时候也需要主动表达和争取。", traits:[{t:"躺平",c:"#A78BFA"},{t:"反内卷",c:"#8B5CF6"},{t:"自洽",c:"#7C3AED"},{t:"松弛感",c:"#C4B5FD"}], careers:[{icon:"✍️",name:"自由撰稿人",reason:"时间自由，躺平写稿两不误"},{icon:"🎵",name:"独立音乐人",reason:"随性创作，拒绝工业流水线"},{icon:"🌿",name:"旅行博主",reason:"边躺边玩，以旅行为生"},{icon:"☕",name:"咖啡馆老板",reason:"小而美，做自己喜欢的事"},{icon:"📷",name:"独立摄影师",reason:"接单自由，拒绝卷价格战"}] },
+  "ESNPA": { name:"社牛卷王", tagline:"人脉就是钱脉", desc:"人脉就是钱脉，你深谙此道。吃饭要拍照，拍照要发圈，发圈要@人。卷和社交两不误，卷王中的战斗机。你是朋友圈里的社交天花板，走到哪里都是焦点。你的Networking能力是天生的优势，在需要整合资源、搭建人脉的岗位上有着无可比拟的天赋。但要小心别让社交变成了表演——真正有价值的人脉是建立在真诚互惠的基础上的，不是简单的点赞之交。另外，你的精力分配也需要注意：社交虽好，别忘了留点时间给自己思考和沉淀。在感情中你是主动型，但有时候太忙着拓展圈子可能会忽略了身边真正重要的人。", traits:[{t:"社牛",c:"#FF9F43"},{t:"卷王",c:"#FF6B6B"},{t:"人脉王",c:"#E67E22"},{t:"控场",c:"#F39C12"}], careers:[{icon:"🤝",name:"商务拓展BD",reason:"人脉变现场，资源整合者"},{icon:"📱",name:"网红/MCN运营",reason:"社牛+内容，天选流量人"},{icon:"🏢",name:"活动策划",reason:"整合资源，搞定各种甲方"},{icon:"💼",name:"保险/理财顾问",reason:"社交即销售，人多就是金矿"},{icon:"🎪",name:"婚庆/主持人",reason:"社交场上的全能选手"}] },
+  "ESNPC": { name:"社牛战士", tagline:"既能聊又能刚", desc:"既能聊又能刚，你是人群中的亮点。硬刚+社交牛杂质的结合体，所到之处，皆是战场也是秀场。你的适应能力极强，上能公开发言震慑全场，下能单独对话拿捏分寸，是难得的综合性人才。但你的「刚」有时候会显得有点攻击性，特别是在观点分歧时容易让气氛变僵。学会在坚持自己和照顾他人感受之间找到平衡，是你人际关系的进阶课。在感情中你是敢于表达的那一方，但有时候表达方式太冲容易好心办坏事——学会有话好好说，能让你们的关系少很多摩擦。", traits:[{t:"社牛",c:"#FF9F43"},{t:"硬刚",c:"#FF6B6B"},{t:"表达力",c:"#E91E63"},{t:"控场",c:"#FF5252"}], careers:[{icon:"🎤",name:"主持人/司仪",reason:"台上控场，台下应酬两不误"},{icon:"📢",name:"企业发言人",reason:"能说会道，关键时刻顶得上"},{icon:"🏛️",name:"商务谈判",reason:"既能喝酒又能硬刚条款"},{icon:"🎬",name:"脱口秀/相声演员",reason:"嘴皮子利索，刚需技能"},{icon:"📨",name:"客户成功经理",reason:"既要对客户刚，又要维稳关系"}] },
+  "ESNFA": { name:"开心果", tagline:"气氛组组长", desc:"你是气氛组组长，乐观能量发射器。跟你待久了会变傻，傻得很开心那种。社交牛杂+乐观怪属性拉满。你的存在本身就是一种治愈——朋友难过的时候，你不需要说什么大道理，只要你在场，大家就会觉得事情没那么糟糕。但要注意，不是所有场合都需要你扮演「开心果」的角色，有时候对方需要的只是安静的陪伴，而不是你的乐观开导。另外，你也要小心别把「总是开心」变成了表演，真正的情绪表达和偶尔的脆弱也是健康人际关系的必要组成。在感情中你是天生的快乐制造机，但别让对方觉得你永远是那个「不需要被照顾」的人。", traits:[{t:"开心果",c:"#FF69B4"},{t:"社牛",c:"#FF9F43"},{t:"乐观",c:"#FFD93D"},{t:"感染力",c:"#27AE60"}], careers:[{icon:"🎭",name:"演员/主持人",reason:"舞台感染力，天生的主角光环"},{icon:"🎨",name:"儿童教育",reason:"快乐氛围受孩子喜欢"},{icon:"🏖️",name:"旅游体验师",reason:"把快乐分享成职业"},{icon:"🍹",name:"品牌大使/KOL",reason:"阳光人设，商家最爱"},{icon:"🎁",name:"活动策划/暖场",reason:"气氛担当，永远的破冰神器"}] },
+  "ESNFC": { name:"躺平社牛", tagline:"社交满分，躺平至上", desc:"社交满分，躺平至上。能不出门绝不出门，能躺着绝不坐着。但一个电话来，你又在派对了。你是矛盾的综合体，但自洽得很。你拥有最理想的生活状态：线上社交游刃有余，线下能不动就不动。这不是懒，而是一种经过思考后的高效选择——用最小的社交成本维持最大的人际关系。但要注意，长期的被动社交可能会让你在真正需要主动出击的时刻失去动力。在感情中你是被动型的一方，但别让「被动」变成了「不在乎」——主动表达一次会让对方感动很久。你的躺平哲学有市场，但别让「差不多就行」侵蚀了你真正在乎的东西。", traits:[{t:"社牛",c:"#FF9F43"},{t:"躺平",c:"#A78BFA"},{t:"反差感",c:"#00BCD4"},{t:"自洽",c:"#7C3AED"}], careers:[{icon:"📱",name:"社交媒体运营",reason:"躺着也能运营百万账号"},{icon:"🎮",name:"游戏主播/代练",reason:"躺平+社交，两不耽误的完美工作"},{icon:"💬",name:"在线客服/陪聊",reason:"能躺着绝不坐着把钱赚了"},{icon:"📦",name:"电商/代购",reason:"线上社交驱动的小生意"},{icon:"🎧",name:"播客/电台主播",reason:"独处工作，社交发声两不误"}] },
+  "EITPA": { name:"独狼卷", tagline:"一个人卷，安静地卷", desc:"一个人卷，安静地卷。你不需要观众，卷是为了自己。孤独是你最好的充电方式，沉默是你最强的武器。你可能是朋友圈里最努力的那个，但也是最低调的——你的卷从来不是为了给别人看，而是源于内心的自我要求。这让你在需要深度专注的领域有着天然的优势。但要注意，再独立的狼也需要同伴，适当的合作和交流能让你的能力放大N倍。学会借助他人的力量，而不是所有事情都自己扛，是从优秀到卓越的必经之路。在感情中你是沉默付出型，但别让对方觉得你「有没有都一样」——偶尔的表达和惊喜能让关系更稳固。", traits:[{t:"独狼",c:"#8B5CF6"},{t:"内卷",c:"#A78BFA"},{t:"专注",c:"#7C3AED"},{t:"独立",c:"#6D28D9"}], careers:[{icon:"🧪",name:"研究员/科学家",reason:"孤独求败，深度研究的天选之人"},{icon:"💰",name:"量化交易员",reason:"独自分析，闷声发大财"},{icon:"📝",name:"独立作家/翻译",reason:"一个人就是一支队伍"},{icon:"🎨",name:"独立设计师/艺术家",reason:"独处才能出好作品"},{icon:"🔬",name:"技术专家/架构师",reason:"安静写代码，卷死所有人"}] },
+  "EITPC": { name:"硬刚独狼", tagline:"不需要队友", desc:"不需要队友，不需要建议。遇到问题一个人扛，扛不住就硬刚。你是孤岛上的战斗机，独立自主的代名词。你的毅力和抗压能力是所有人里最强的——只要是你认定的事情，没有任何困难能让你放弃。但你的独立有时会变成孤立无援，要记住，真正的强者不是所有事情都自己扛，而是知道什么时候该借力。学会开口求助，是你在职场和人际关系中都需要突破的瓶颈。在感情中你是完全独立的一方，但别让对方觉得自己不被需要——偶尔示弱和依赖，会让你们的关系更平等也更深入。", traits:[{t:"独狼",c:"#8B5CF6"},{t:"硬刚",c:"#FF6B6B"},{t:"独立",c:"#7C3AED"},{t:"固执",c:"#6D28D9"}], careers:[{icon:"🗡️",name:"独立开发者",reason:"一个人做出一款产品"},{icon:"⚔️",name:"律师/法律顾问",reason:"单打独斗也能赢案子"},{icon:"🛠️",name:"自由工程师",reason:"技术过硬，不需要团队背书"},{icon:"📊",name:"独立咨询师",reason:"专业能力是你最强的靠山"},{icon:"🎯",name:"独立投资人",reason:"自己的判断，不受他人干扰"}] },
+  "EITFA": { name:"独行乐", tagline:"一个人也能很开心", desc:"一个人也能很开心？你就是答案。不依赖外界，自身就是快乐源泉。独处时你最强大，也最自在。你拥有一种稀有的能力——完全不依赖外界的认可来获得幸福感。这让你在独处时也能充实快乐，是真正内心强大的人。但要注意，独处的快乐不应该变成社交回避的借口——与人分享快乐，快乐会加倍；与人分担痛苦，痛苦会减半。学会在独处和社交之间找到平衡，是你的成长方向。在感情中你是最不容易感到孤独的一方，但也要注意，别让对方觉得「有你没有你都一样」——主动的关心和陪伴能让你们的关系更紧密。", traits:[{t:"独行",c:"#00C9A7"},{t:"自洽",c:"#00BCD4"},{t:"独立",c:"#27AE60"},{t:"自由",c:"#2ECC71"}], careers:[{icon:"🧘",name:"自由职业/数字游民",reason:"工作地点自由，随遇而安"},{icon:"🌏",name:"旅行体验师/背包客",reason:"一个人也能玩遍全世界"},{icon:"📚",name:"独立学者/撰稿人",reason:"沉下心来，做好自己的研究"},{icon:"🍳",name:"美食博主/探店达人",reason:"一个人也能吃出幸福感"},{icon:"🏊",name:"健身/户外教练",reason:"自律独行，不需要伴儿"}] },
+  "EITFC": { name:"独行侠", tagline:"低质量社交不如没有", desc:"低质量社交不如没有，你信奉精英社交。朋友不在多，在于懂你。你是独行侠，大隐隐于市的那种。你的社交哲学非常成熟——宁可高质量独处，也不要低质量社交。这让你的人际关系质量极高，每一段关系都是真正有价值的。但在职场中，这种态度可能会让你错过一些必要的资源积累。学会区分「有效弱连接」和「低质量社交」，在保持初心的同时也能拓展人脉，是你的进阶课题。在感情中你是宁缺毋滥型，但别让「完美主义」变成了「不将就」——有时候缘分到了，就是那个人，不是完美的人。", traits:[{t:"独行",c:"#8B5CF6"},{t:"高冷",c:"#7C3AED"},{t:"精英社交",c:"#6D28D9"},{t:"挑剔",c:"#A78BFA"}], careers:[{icon:"🏛️",name:"高端定制服务",reason:"小众市场，精英客户"},{icon:"💎",name:"珠宝/艺术品鉴定",reason:"专业审美，圈子文化"},{icon:"🧳",name:"高端旅游定制师",reason:"服务少数人，深度体验"},{icon:"📖",name:"知识付费/KOL",reason:"用内容筛选精准受众"},{icon:"🍷",name:"品酒师/侍酒师",reason:"小众圈子，精英文化"}] },
+  "ENNPA": { name:"社交元人", tagline:"人设包装大师", desc:"人设包装大师，朋友圈经营砖家。你的每条动态都是精心策划，每张照片都价值连城。影响力是你追求的货币。你深谙互联网传播的规律，知道什么样的人设能吸引什么样的人。这是一种稀缺的能力——你既是内容的生产者，也是内容的运营者。但要小心别让人设绑架了真实的自己——粉丝喜欢的是你展示的那个形象，但真正爱你的人应该爱你真实的样子。在算法时代，你的包装能力是巨大的优势，但也不要让流量成为衡量一切的标准。在感情中你是高调型，但别让「展示」成了关系的负担——真实的爱不需要包装。", traits:[{t:"大V",c:"#E67E22"},{t:"人设",c:"#FF9F43"},{t:"影响力",c:"#F39C12"},{t:"表演",c:"#E91E63"}], careers:[{icon:"📱",name:"博主/网红/KOL",reason:"影响力变现，流量即金钱"},{icon:"🎬",name:"MCN机构运营",reason:"包装达人，批量制造网红"},{icon:"📢",name:"品牌营销总监",reason:"人设即品牌，懂得用户心理"},{icon:"🎭",name:"艺人经纪",reason:"包装艺人是一门学问"},{icon:"📣",name:"广告创意总监",reason:"制造刷屏事件的高手"}] },
+  "ENNPC": { name:"键盘侠", tagline:"网上重拳出击", desc:"网上重拳出击，线下岁月静好。你的键盘是你的武器，你的屏幕是你的战场。义正言辞是你战斗的姿态。你是互联网时代的评论家，有思想、有观点、不沉默。但要注意，「网上刚」和「线下刚」是两码事——现实中的关系维护和沟通方式与网上完全不同，不能用同一套逻辑处理。在网上你可以做战斗模式，在现实中建议切换成和解模式。另外，你的高正义感如果用在正确的方向，可以成为推动社会进步的力量，比如做消费者维权、社会议题倡导等。在感情中你可能会把网络上的习惯带进来——辩论赢了但感情输了，得不偿失。", traits:[{t:"键盘侠",c:"#E74C3C"},{t:"键政",c:"#C0392B"},{t:"战斗欲",c:"#FF5252"},{t:"正义感",c:"#9B59B6"}], careers:[{icon:"✍️",name:"时事评论员",reason:"键盘就是武器，评论就是力量"},{icon:"📣",name:"媒体记者/调查记者",reason:"挖掘真相，舆论监督"},{icon:"⚖️",name:"消费者维权律师",reason:"帮普通人对抗大公司"},{icon:"🛡️",name:"网络安全工程师",reason:"用技术手段解决网络乱象"},{icon:"🎯",name:"社群运营/舆论引导",reason:"引导正向舆论，化解危机"}] },
+  "ENNFA": { name:"社牛乐观", tagline:"永远正能量", desc:"永远正能量，永远笑嘻嘻。悲观这种情绪跟你没关系，天塌下来有乐观顶着，你是朋友圈的人形暖宝宝。你的存在本身就是一种治愈力——朋友有烦恼时第一个想到你，因为你总能让事情看起来没那么糟。但要注意，你的乐观有时候会变成一种情感负担——朋友需要的可能只是有人陪着难过，而不是你不停地输出「往好处想」。学会倾听，而不是给建议；学会陪伴，而不是转移注意力——这是你人际关系更进一步的钥匙。在感情中你是天生的治愈系，但别让自己成为「永远的正能量提供者」——偶尔展示脆弱是关系的推进器，不是阻碍。", traits:[{t:"乐观",c:"#FFD93D"},{t:"社牛",c:"#FF9F43"},{t:"正能量",c:"#F39C12"},{t:"温暖",c:"#27AE60"}], careers:[{icon:"🤝",name:"销售/BD",reason:"乐观感染客户，成单率翻倍"},{icon:"🏥",name:"护士/心理咨询师",reason:"情绪稳定，治愈力强"},{icon:"🌱",name:"保险代理人",reason:"乐观推销，客户感受好"},{icon:"🎓",name:"教师/培训师",reason:"传递正能量，学生喜欢你"},{icon:"🐾",name:"宠物行业/宠物店员",reason:"每天接触可爱事物，保持快乐"}] },
+  "ENNFC": { name:"人间清醒", tagline:"社交懒，低欲望", desc:"社交懒，低欲望，看透一切。你的心态稳如老狗，不争不抢不焦虑。人间清醒就是你的人生标签。你是朋友圈里活得最明白的那个——不是因为你做了什么特别的事，而是因为你选择了不被社会的KPI推着走。你的淡定来源于选择，而不是无奈。但要注意，这种「人间清醒」有时候会变成「人间冷漠」——不是所有事情都需要你保持距离，有的事情值得你投入和在乎。另外，你的低欲望如果到了影响生活动力的程度，也需要反思——真正的清醒是知道什么重要，然后去在乎它。在感情中你是最不会焦虑的一方，但别让对方觉得你对这段关系不在乎——主动表达是在乎的最直接证明。", traits:[{t:"清醒",c:"#95A5A6"},{t:"淡定",c:"#7F8C8D"},{t:"低欲望",c:"#ABB7B7"},{t:"通透",c:"#BDC3C7"}], careers:[{icon:"🏠",name:"民宿/长租公寓运营",reason:"不争不抢，稳健经营"},{icon:"📚",name:"图书馆员/档案管理",reason:"稳定清静，低欲望最适配"},{icon:"🍵",name:"茶艺师/茶叶店",reason:"慢节奏，低欲望，与世无争"},{icon:"🧘",name:"冥想/瑜伽老师",reason:"精神修养，淡泊名利"},{icon:"🌿",name:"花艺师/园艺师",reason:"与植物为伴，简单生活"}] },
+  "ISTPA": { name:"老黄牛", tagline:"埋头干活不说话", desc:"埋头干活不说话，卷是默默卷。你不求关注，只求结果。别人不知道你在卷，但成果说明一切。你是团队里最可靠的那个人——交给你的任务从来不操心，你总能按时按质完成。但要注意，默默干活也要学会适当的展示和汇报——职场中「做了事但不让人知道」和「没做事」在很多人眼里是没有区别的。另外，你的低调有时候会变成晋升的障碍——当领导都不确定你是不是那个最努力的人时，升职加薪可能就会忘记你。在感情中你是默默付出型，但别让对方觉得一切都是理所当然——偶尔的撒娇和索要回报，能让关系更平衡。", traits:[{t:"老黄牛",c:"#F39C12"},{t:"靠谱",c:"#27AE60"},{t:"低调",c:"#00BCD4"},{t:"执行强",c:"#0097A7"}], careers:[{icon:"🏭",name:"生产管理/质量管理",reason:"默默把控每个细节"},{icon:"🔧",name:"供应链/物流管理",reason:"可靠执行，零出错率"},{icon:"💊",name:"医药/实验技术员",reason:"耐心严谨，重复工作也能做好"},{icon:"🖥️",name:"运维/DevOps工程师",reason:"后台守护者，默默维稳"},{icon:"📐",name:"建筑/工程监理",reason:"监督质量，不说话只做事"}] },
+  "ISTPC": { name:"守望者", tagline:"默默守护稳稳输出", desc:"默默守护稳稳输出，你是那个永远靠谱的人。不说硬话，不做软事，但关键时刻从不缺席。你是朋友圈里最可靠的后盾——朋友有事只要你力所能及，一定第一时间出现。但你的靠谱有时候会被人当成理所当然，要学会对不合理的要求说不。你的守护欲是优点，但也要分清界限——不是所有人、所有事都值得你守护。在感情中你是最稳定的依靠，但别让对方觉得你是「不用珍惜」的存在——适度的不可得性反而能让关系更健康发展。", traits:[{t:"守护",c:"#00BCD4"},{t:"靠谱",c:"#0097A7"},{t:"稳定",c:"#00ACC1"},{t:"低调",c:"#00838F"}], careers:[{icon:"👨‍⚕️",name:"医生/药剂师",reason:"守护健康，关键时刻顶得上"},{icon:"🏦",name:"银行风控/柜员",reason:"靠谱稳定，守护每一分钱"},{icon:"👩‍🏫",name:"教师/教务管理",reason:"稳定输出，守护学生成长"},{icon:"🛡️",name:"安保/物业管理",reason:"守护一方平安"},{icon:"📞",name:"客服主管/售后管理",reason:"靠谱处理每一个客户问题"}] },
+  "ISTFA": { name:"内卷乐", tagline:"卷并快乐着", desc:"卷并快乐着，这是你的超能力。别人卷是痛苦，你卷是享受。你是那种让同事感到压力的卷王（褒义）。但要注意，你的卷如果影响了团队的整体氛围，可能会造成不必要的竞争压力。真正的领导力不是卷死同事，而是带着团队一起变强。另外，你的自我驱动能力如果能学会借助团队的力量，可以创造出远超个人的成就。在感情中你是那种「我很忙但我享受」的状态，但别让忙碌成为忽略对方的借口——陪伴的质量比时长更重要。", traits:[{t:"内卷",c:"#F39C12"},{t:"自驱",c:"#E67E22"},{t:"高效",c:"#D35400"},{t:"享受",c:"#27AE60"}], careers:[{icon:"💻",name:"互联网产品/运营",reason:"卷赢同龄人，靠的是享受"},{icon:"📊",name:"四大会计师事务所",reason:"忙季卷到飞起，但你享受其中"},{icon:"⚖️",name:"律师/法务顾问",reason:"案子堆成山，赢才是乐趣"},{icon:"🏥",name:"住院医师/规培生",reason:"学医就是终身卷，但你甘之如饴"},{icon:"📈",name:"投资银行分析师",reason:"卷天卷地，薪资是对卷的补偿"}] },
+  "ISTFC": { name:"独行躺王", tagline:"表面躺实际卷", desc:"表面躺实际卷，你是隐藏王者。看起来与世无争，背地里疯狂努力。你是卷王中的伪装者，也是最被低估的那种人。但要注意，你的「躺」如果被不了解你的人当真，可能会错失一些机会——适当的展示和表达自己，是被你忽略但很重要的一课。另外，你的这种反差风格如果用在正确的领域，可以成为独特的个人品牌——「看起来不努力其实最努力」，这是一种很有人格魅力的反差。在感情中你是最会隐藏真实状态的一方，但别让对方觉得完全看不透你——偶尔的真实流露能让关系更亲近。", traits:[{t:"伪装",c:"#7C3AED"},{t:"躺王",c:"#A78BFA"},{t:"隐藏卷",c:"#8B5CF6"},{t:"反差",c:"#6D28D9"}], careers:[{icon:"🎭",name:"咨询师/战略顾问",reason:"看起来在聊天，实际在解决问题"},{icon:"🧙",name:"神秘学/塔罗/命理师",reason:"人设神秘，背地里很努力"},{icon:"🎮",name:"职业选手/代练",reason:"表面娱乐玩家，实际卷王一枚"},{icon:"📸",name:"狗仔/娱乐记者",reason:"低调跟踪，暗中收集情报"},{icon:"🔍",name:"商业情报/竞调分析师",reason:"默默调研，表面云淡风轻"}] },
+  "ISNPA": { name:"策划人", tagline:"暗中观察谋划一切", desc:"暗中观察谋划一切，你是朋友圈的军师。不出手则已，出手就是王炸。思想是你最锋利的武器。你是天生的策划者——在别人还在想「做什么」的时候，你已经在想「怎么做」了。但要注意，你的计划如果一直停留在脑子里而没有执行，就永远只是想法。学会把计划变成行动，是从「军师」到「统帅」的关键一步。另外，你的洞察力如果用在正确的方向，可以做出非常了不起的判断和决策。在感情中你是默默出主意的一方，但别让对方觉得所有事情都是ta在做决定——适度的强势和主动，能让你们的关系更平等。", traits:[{t:"策划",c:"#E67E22"},{t:"谋士",c:"#F39C12"},{t:"洞察",c:"#D35400"},{t:"幕后",c:"#C0392B"}], careers:[{icon:"📋",name:"战略咨询师",reason:"出谋划策，影响企业决策"},{icon:"🎬",name:"编剧/导演",reason:"幕后策划，讲故事的高手"},{icon:"📊",name:"市场研究/行业分析师",reason:"洞察先机，掌握行业规律"},{icon:"🧩",name:"产品经理",reason:"策划产品，定义方向"},{icon:"🔮",name:"天使投资人",reason:"看人看项目，洞察未来趋势"}] },
+  "ISNPC": { name:"冷面刚", tagline:"社恐但硬刚", desc:"社恐但硬刚，不鸣则已一鸣惊人。你不是不会社交，只是不想社交。真到关键时刻，你是那个站出来的人。你把所有的社交能量都留给了真正重要的人和事，这是非常成熟的做法。但要注意，社恐不是你逃避所有社交的借口——必要的职场社交、客户沟通还是要做到的。另外，你的「冷面」有时候会让人误会你是高冷或者不屑于与人交流，实际上你只是不想说话而已。在感情中你是外冷内热型，但别让对方误解你的沉默——主动表达是破解误会的最好方式。", traits:[{t:"冷面",c:"#2980B9"},{t:"硬刚",c:"#1A5276"},{t:"社恐",c:"#3498DB"},{t:"关键时刻",c:"#E74C3C"}], careers:[{icon:"🖥️",name:"网络安全工程师",reason:"技术硬核，不需要太多社交"},{icon:"🔬",name:"研究员/博士",reason:"学术圈，社恐是常态"},{icon:"🎨",name:"原画师/插画师",reason:"用作品说话，不需要嘴皮子"},{icon:"🧪",name:"药品研发/生物技术",reason:"实验为主，社恐适配"},{icon:"📊",name:"数据科学家",reason:"分析数据，解决复杂问题"}] },
+  "ISNFA": { name:"独处达人", tagline:"独处且快乐", desc:"独处且快乐，孤独是你的好朋友。一个人吃饭旅行到处走停停，你是自己最好的陪伴。你拥有一种非常珍贵的品质——完全自洽的独处能力。在这个充满焦虑的时代，你能享受独处本身就是一种巨大的心理健康优势。但要注意，独处的快乐不应该变成社交退缩的借口——人是社会性动物，完全脱离群体会让你失去一些只有人际关系才能带来的幸福感。学会主动社交，而不是被动等待，是你的成长方向。在感情中你是最不会感到孤独的一方，但别让对方觉得你「一个人也过得很好，不需要我」——适当的依赖能让对方感到被需要。", traits:[{t:"独处",c:"#00BCD4"},{t:"自洽",c:"#00838F"},{t:"自由",c:"#00ACC1"},{t:"独立",c:"#0097A7"}], careers:[{icon:"✈️",name:"旅行自媒体/博主",reason:"一个人上路，记录全世界"},{icon:"📚",name:"独立作家/写手",reason:"独处是灵感来源，创作必备"},{icon:"🎸",name:"独立音乐制作人",reason:"一个人就是一个乐队"},{icon:"🎨",name:"艺术家/画廊主理",reason:"独处创作，艺术需要孤独"},{icon:"🧘",name:"冥想/禅修导师",reason:"精神探索，独处即修行"}] },
+  "INFLC": { name:"淡定王者", tagline:"什么都与我无关", desc:"什么都与我无关，你是最淡定的人。大事小事在你眼里都是小事，天塌不塌先看有没有砸到我。你是朋友圈里心态最好的那个——没有之一。但要注意，淡定和冷漠只有一线之隔。真正的心态好是「我能接受所有结果」而不是「我不在乎任何结果」。学会在淡定和在乎之间找到平衡，是你的必修课。另外，你的这种淡定如果被误解为「没有热情」，可能会在职场和社交中吃亏——适当的表现出在乎和热情，是社交的必要组成。在感情中你是最不容易焦虑的一方，但别让对方觉得你对这段关系无所谓——主动表达关心是在乎的最直接方式。", traits:[{t:"淡定",c:"#95A5A6"},{t:"冷漠",c:"#7F8C8D"},{t:"稳定",c:"#ABB7B7"},{t:"抽离",c:"#BDC3C7"}], careers:[{icon:"🏔️",name:"户外/极限运动教练",reason:"淡定应对各种突发状况"},{icon:"🆘",name:"急救医生/救援人员",reason:"紧急情况下保持绝对冷静"},{icon:"🧘",name:"心理咨询师/治疗师",reason:"情绪的容器，淡定是基本功"},{icon:"🏛️",name:"公务员/窗口服务",reason:"每天面对各种，淡定以对"},{icon:"🌊",name:"出海船员/潜水教练",reason:"大海面前，保持淡定才能保命"}] },
+  "INTPA": { name:"卷神", tagline:"最高级的卷", desc:"最高级的卷，卷到无怨无悔。你是那种让猎头都头疼的人才，因为没有合适的职位能跟上你的节奏。你的卷是全方位的——思维、行动、结果，每一环节都追求极致。但要注意，卷神也有疲惫的一天——学会在高速运转中给自己喘息的机会，是可持续卷的前提。另外，你的极致追求如果能学会借助团队的力量，可以创造出远超个人的成就——一个人的极致有上限，团队的极致无上限。在感情中你是高标准型，但别让高标准成为关系的负担——完美主义是关系的隐形杀手。", traits:[{t:"卷神",c:"#E74C3C"},{t:"极致",c:"#C0392B"},{t:"高目标",c:"#FF5252"},{t:"自驱",c:"#FF6B6B"}], careers:[{icon:"🏆",name:"职业运动员",reason:"竞技场是卷神的舞台"},{icon:"💰",name:"金融/投行顶级交易员",reason:"用极限挑战换取极限回报"},{icon:"🎓",name:"名校研究生/博士",reason:"卷进顶尖学府是卷神的勋章"},{icon:"🚀",name:"创业者/CEO",reason:"创业是最高级别的卷"},{icon:"🏅",name:"奥运选手/竞技选手",reason:"更高更快更强，卷神的极致追求"}] },
+  "INTPC": { name:"思想钢印", tagline:"我认为对的就是对的", desc:"我认为对的就是对的，这是你的信条。信念坚定不动摇，你是行走的价值观，所见之处皆是你的领地。但要注意，信念坚定和固执只有一线之隔。真正的成长型思维是「我可以坚持我的观点，但我也愿意听听不同的声音」。学会在坚持和开放之间找到平衡，是思想钢印持有者最重要的课题。另外，你的坚定如果用在推动正向改变上，可以成为改变世界的力量——很多推动社会进步的人，都是有坚定信念的思想钢印患者。在感情中你是最坚持自己方式的一方，但别让「我的方式最好」变成关系的绊脚石——学会欣赏对方的方式，也是一种智慧。", traits:[{t:"固执",c:"#8E44AD"},{t:"信念",c:"#9B59B6"},{t:"坚定",c:"#A569BD"},{t:"原则",c:"#7D3C98"}], careers:[{icon:"⚖️",name:"法官/仲裁员",reason:"坚定法律信仰，维护公平正义"},{icon:"🏛️",name:"政治家/政策制定者",reason:"信念驱动，改变国家走向"},{icon:"📣",name:"社会活动家",reason:"坚定信念，推动社会变革"},{icon:"📚",name:"学者/大学教授",reason:"学术理想，坚守研究底线"},{icon:"🛡️",name:"人权律师",reason:"为正义辩护，信念不动摇"}] },
+  "INTFA": { name:"理想主义者", tagline:"内心戏很多", desc:"内心戏很多，理想很丰满。你活在自己构建的完美世界里，并为此默默努力。理想主义是你的翅膀。但要注意，理想主义如果脱离现实，就是空想。你的内心世界如此丰富，是创作和创意的源泉，但如果不能落地，就是空中楼阁。学会把理想变成可执行的计划，是理想主义者最重要的成长方向。另外，你的理想如果能找到现实的支点，可以创造出真正有价值的创新——很多伟大的产品都源于理想主义者的「如果世界可以这样」。在感情中你是最有浪漫情怀的一方，但别让理想化的期待变成对对方的压力——接受对方真实的样子，而不是你想象中的样子。", traits:[{t:"理想",c:"#16A085"},{t:"内戏",c:"#1ABC9C"},{t:"浪漫",c:"#27AE60"},{t:"纯粹",c:"#2ECC71"}], careers:[{icon:"🎬",name:"导演/编剧/艺术家",reason:"理想主义是创作的燃料"},{icon:"🏗️",name:"社会创业者",reason:"用商业手段解决社会问题"},{icon:"🌍",name:"环保/公益组织创始人",reason:"理想主义驱动，改变世界"},{icon:"📖",name:"作家/诗人",reason:"内心戏变成文字，影响千万人"},{icon:"💡",name:"产品创新顾问",reason:"想象未来的产品形态"}] },
+  "INTFC": { name:"摆烂大师", tagline:"想卷但躺着更舒服", desc:"想卷但躺着更舒服，这是你的人生。明日复明日，明日还明日。你是摆烂界的大师，领军人物。但要注意，摆烂应该是主动的选择，而不是被动的逃避——真正高级的摆烂是「我看透了我选择躺」，而不是「我卷不动了我被迫躺」。另外，摆烂虽爽，但别让摆烂成为所有事情的借口——在你真正在乎的事情上，还是要全力以赴。在感情中你是最不会制造压力的一方，但别让对方觉得你对未来没有任何规划——偶尔对未来的讨论和承诺，是关系稳定的信号。", traits:[{t:"摆烂",c:"#95A5A6"},{t:"拖延",c:"#7F8C8D"},{t:"自洽",c:"#ABB7B7"},{t:"淡定",c:"#BDC3C7"}], careers:[{icon:"🛏️",name:"酒店试睡员/旅行体验师",reason:"摆烂也能赚钱的职业典范"},{icon:"📷",name:"佛系博主/生活达人",reason:"人设立住了，摆烂也是人设"},{icon:"☕",name:"咖啡馆常客/探店博主",reason:"日常摆烂，发现城市好去处"},{icon:"🎮",name:"游戏代练/陪玩",reason:"躺着赚钱，玩就是工作"},{icon:"🐱",name:"宠物博主/萌宠达人",reason:"撸猫撸狗，顺便把钱赚了"}] },
+  "INNPA": { name:"大V", tagline:"影响力玩家", desc:"影响力玩家，粉丝就是力量。你深谙传播之道，每一条内容都是精心计算。网红经济，你是最认真的玩家。你是把个人影响力变现的高手——在这个时代，影响力就是资产。但要注意，影响力的副作用是容易让人忘记真实的自己——粉丝喜欢的是你展示的那个人设，但真正爱你的人应该接受真实的你。另外，不要被流量绑架——真正有价值的影响力不是有多少粉丝，而是你的内容能帮助多少人。在感情中你是高调型，但别让「展示」变成了关系的全部——真实的生活和感情不需要表演。", traits:[{t:"大V",c:"#E91E63"},{t:"影响力",c:"#C2185B"},{t:"网红",c:"#F06292"},{t:"流量",c:"#EC407A"}], careers:[{icon:"📱",name:"头部博主/带货主播",reason:"影响力变现，年入千万不是梦"},{icon:"🎬",name:"内容总监/MCN创始人",reason:"从博主到公司，创建流量帝国"},{icon:"📣",name:"品牌战略顾问",reason:"影响力即商业价值"},{icon:"🎯",name:"个人品牌咨询师",reason:"帮人设打造个人品牌"},{icon:"💎",name:"高端品牌代言人",reason:"顶级影响力，顶级变现"}] },
+  "INNPC": { name:"互联网嘴替", tagline:"你想说的正是大家想说的", desc:"专业嘴替，你想说的正是大家想说而不敢说的。你的评论区永远比正文精彩，你是互联网嘴替第一人。你是互联网时代最稀缺的内容创作者——你代表的是沉默的大多数的声音。但要注意，嘴替也需要有底线——不是所有博眼球的话都值得说，有些话说了会伤害到特定群体。另外，你的敢说如果能加上深度和建设性，就不只是嘴替而是意见领袖了。在感情中你是最敢表达的一方，但别把「敢说」变成了「不会说话」——表达方式和内容一样重要。", traits:[{t:"嘴替",c:"#C2185B"},{t:"敢说",c:"#E91E63"},{t:"尖锐",c:"#AD1457"},{t:"真实",c:"#D81B60"}], careers:[{icon:"✍️",name:"时事评论员/博主",reason:"说出别人想说不敢说的话"},{icon:"🎤",name:"脱口秀演员",reason:"嘴替是脱口秀的核心技能"},{icon:"📣",name:"危机公关专家",reason:"敢说会扳，善用舆论力量"},{icon:"🎬",name:"吐槽视频博主",reason:"互联网嘴替，娱乐至上的评论"},{icon:"💬",name:"社群运营/KOL",reason:"活跃气氛，说出群体心声"}] },
+  "INNFA": { name:"彩虹屁", tagline:"自我感觉超级好", desc:"自我感觉超级好，你是自己的第一粉丝。自信爆棚的你，每一天都在给自己打气。自信是最好的医美。你是朋友圈里最自洽的那个——不是自卑也不是自负，而是健康的自我认可。但要注意，自信过头会变成自恋——自我感觉超级好不代表别人也要觉得你超级好，学会接受别人有自己的判断。另外，你的自信如果建立在真实的成就而非虚假的自我之上，就是最强大的武器。在感情中你是最有魅力的一方，但别让「自恋」变成对方的压力——真正的自信是接受对方也有自己的价值。", traits:[{t:"自信",c:"#F39C12"},{t:"彩虹屁",c:"#E67E22"},{t:"自恋",c:"#D35400"},{t:"乐观",c:"#F1C40F"}], careers:[{icon:"💄",name:"美妆博主/时尚达人",reason:"自信是最好的妆容"},{icon:"🏋️", name:"健身博主/体态教练",reason:"自信是最好的塑形"},{icon:"🎤",name:"主持人/司仪",reason:"自信hold住全场"},{icon:"💼",name:"演讲教练/培训师",reason:"自信传染，自信传递"},{icon:"🎭",name:"演员/表演者",reason:"舞台需要绝对的自信"}] },
+  "INNFC": { name:"互联网隐士", tagline:"我不想理你", desc:"我不想理你，也不想跟你解释。低质量社交是我最讨厌的事。你是互联网里的隐士，爱看不看。你活在自己构建的小宇宙里，不被外界的评价体系所左右。这是非常难得的品质——能真正做到「不活在别人的目光里」的人少之又少。但要注意，互联网隐士不应该是社恐的借口——如果你是因为害怕社交而选择隐士，那这不是真正的高冷而是在逃避。真正的隐士是「我可以选择社交，但我选择不」，而不是「我不敢社交所以我隐士」。在感情中你是最独立的一方，但别让「我不想解释」变成沟通的障碍——好的关系需要解释和表达。", traits:[{t:"隐士",c:"#7F8C8D"},{t:"高冷",c:"#95A5A6"},{t:"独立",c:"#ABB7B7"},{t:"淡漠",c:"#BDC3C7"}], careers:[{icon:"🖥️",name:"独立开发者/黑客",reason:"技术宅不需要社交"},{icon:"📚",name:"电子书/知识付费创作者",reason:"一个人做内容，不用抛头露面"},{icon:"🎨",name:"数字艺术/NFT创作者",reason:"作品即身份，不需要本人出镜"},{icon:"🔐",name:"区块链/加密行业从业者",reason:"匿名精神，加密文化的践行者"},{icon:"🎮",name:"游戏制作人/独立游戏开发者",reason:"作品说话，开发者不需要社交"}] },
 };
 
 // ===== STATE =====
-let answers = []; // array of 'A' or 'B'
-let curQ = 0;
+var answers = [];
+var curQ = 0;
 
 document.getElementById('startBtn').addEventListener('click', startTest);
 document.getElementById('shareBtn').addEventListener('click', shareResult);
-document.getElementById('replayBtn').addEventListener('click', () => location.reload());
+document.getElementById('replayBtn').addEventListener('click', function() { location.reload(); });
 
 function startTest() {
   answers = []; curQ = 0;
@@ -361,24 +350,28 @@ function startTest() {
 }
 
 function showQ() {
-  const q = QS[curQ];
-  const dim = DIMS[q.d];
+  var q = QS[curQ];
+  var dim = DIMS[q.d];
   document.getElementById('qNum').textContent = curQ + 1;
   document.getElementById('dimLabel').textContent = dim.name;
   document.getElementById('progFill').style.width = ((curQ + 1) / QS.length * 100).toFixed(2) + '%';
   document.getElementById('qText').textContent = q.q;
-  const optsEl = document.getElementById('qOpts');
+  var optsEl = document.getElementById('qOpts');
   optsEl.innerHTML = '';
-  q.a.forEach((opt, i) => {
-    const btn = document.createElement('button');
+  for (var i = 0; i < q.a.length; i++) {
+    var opt = q.a[i];
+    var btn = document.createElement('button');
     btn.className = 'q-opt';
-    btn.innerHTML = `<span class="q-opt-letter">${opt.l}</span><span>${opt.t}</span>`;
-    btn.addEventListener('click', () => pick(i));
+    btn.innerHTML = '<span class="q-opt-letter">' + opt.l + '</span><span>' + opt.t + '</span>';
+    (function(idx) {
+      btn.addEventListener('click', function() { pick(idx); });
+    })(i);
     optsEl.appendChild(btn);
-  });
-  // animate
-  const card = document.getElementById('qCard');
-  card.style.animation = 'none'; card.offsetHeight; card.style.animation = 'slideIn 0.3s ease';
+  }
+  var card = document.getElementById('qCard');
+  card.style.animation = 'none';
+  card.offsetHeight;
+  card.style.animation = 'slideIn 0.3s ease';
 }
 
 function pick(idx) {
@@ -392,14 +385,11 @@ function pick(idx) {
 }
 
 function calcType() {
-  // Count per dimension (6 questions each)
-  // D0-EI, D1-SN, D2-TF, D3-JP, D4-AC, D5-SN2, D6-OA, D7-HL
-  const dimScores = [0,0,0,0,0,0,0,0];
-  QS.forEach(function(q, i) {
-    dimScores[q.d] += answers[i] === 'A' ? 1 : 0;
-  });
-  // Convert to letter (use >= 3 to treat 3/6 as the "A" side for 50-50 split)
-  const letters = [
+  var dimScores = [0,0,0,0,0];
+  for (var i = 0; i < QS.length; i++) {
+    dimScores[QS[i].d] += (answers[i] === 'A') ? 1 : 0;
+  }
+  var letters = [
     dimScores[0] >= 3 ? 'E' : 'I',
     dimScores[1] >= 3 ? 'S' : 'N',
     dimScores[2] >= 3 ? 'T' : 'F',
@@ -413,16 +403,14 @@ function showResult() {
   document.getElementById('question-screen').classList.remove('active');
   document.getElementById('result-screen').classList.add('active');
   var result = calcType();
-  var key = result.key;
-  var dimScores = result.dimScores;
-  var t = TYPES[key] || TYPES['INTFC'];
+  var t = TYPES[result.key] || TYPES['INTFC'];
 
-  document.getElementById('resBadge').textContent = t.traits[0].t;
+  document.getElementById('resBadge').textContent = result.key;
   document.getElementById('resName').textContent = t.name;
   document.getElementById('resTagline').textContent = t.tagline;
   document.getElementById('resDesc').textContent = t.desc;
 
-  // Chips
+  // Traits
   var chipsEl = document.getElementById('resChips');
   var chipsHtml = '';
   for (var i = 0; i < t.traits.length; i++) {
@@ -431,48 +419,20 @@ function showResult() {
   }
   chipsEl.innerHTML = chipsHtml;
 
-  // 8 dims
-  var dimsGrid = document.getElementById('dimsGrid');
-  dimsGrid.innerHTML = '';
-  for (var di = 0; di < DIMS.length; di++) {
-    var dim = DIMS[di];
-    var score = Math.round(dimScores[di] / 6 * 100);
-    var isA = score >= 50;
-    var col = DIM_COLORS[di % DIM_COLORS.length];
-    dimsGrid.innerHTML += '<div class="dim-item"><div class="dim-name">' + (isA ? dim.dimA : dim.dimB) + '<span>' + score + '%</span></div><div class="dim-track"><div class="dim-fill" style="width:0%;background:' + col + '"></div></div></div><div class="dim-sep"></div><div class="dim-item"><div class="dim-name" style="justify-content:flex-end">' + (isA ? dim.dimB : dim.dimA) + '<span>' + (100 - score) + '%</span></div><div class="dim-track"><div class="dim-fill" style="width:0%;background:#333"></div></div></div>';
+  // Career
+  var careerEl = document.getElementById('careerList');
+  var careerHtml = '';
+  for (var j = 0; j < t.careers.length; j++) {
+    var c = t.careers[j];
+    careerHtml += '<div class="career-item"><span class="c-icon">' + c.icon + '</span><span><span class="c-name">' + c.name + '</span> <span class="c-reason">' + c.reason + '</span></span></div>';
   }
-
-  // Compat
-  var compatEl = document.getElementById('compatList');
-  var compatHtml = '';
-  for (var ci = 0; ci < t.compat.length; ci++) {
-    var c = t.compat[ci];
-    compatHtml += '<div class="compat-item"><span class="compat-icon">' + c.icon + '</span><span class="compat-type">' + c.name + '</span><span style="color:var(--text-dim)">' + c.type + '</span></div>';
-  }
-  compatEl.innerHTML = compatHtml;
-
-  // Animate dims after a short delay (wait for fadeIn to start)
-  var animDone = false;
-  function animDims() {
-    var fills = dimsGrid.querySelectorAll('.dim-fill');
-    for (var fi = 0; fi < fills.length; fi++) {
-      var el = fills[fi];
-      var dimIdx = Math.floor(fi / 2);
-      var s = Math.round(dimScores[dimIdx] / 6 * 100);
-      var isLeft = (fi % 2 === 0);
-      var pct = isLeft ? s : (100 - s);
-      if (pct < 0) pct = 0;
-      if (pct > 100) pct = 100;
-      el.style.width = pct + '%';
-    }
-  }
-  setTimeout(animDims, 350); // after fadeIn completes
+  careerEl.innerHTML = careerHtml;
 }
 
 function shareResult() {
   var result = calcType();
   var t = TYPES[result.key] || TYPES['INTFC'];
-  var text = '我的赛博人格：【' + result.key + ' · ' + t.name + '】\n"' + t.tagline + '"\n' + t.desc + '\n\n#赛博人格测试 #SBTI\nhttps://caoxianhuang-creator.github.io/sbti/';
+  var text = '我的赛博人格：【' + result.key + ' · ' + t.name + '】\n"' + t.tagline + '"\n' + t.desc.substring(0, 100) + '...\n\n#赛博人格测试 #SBTI\nhttps://caoxianhuang-creator.github.io/sbti/';
   if (navigator.clipboard) {
     navigator.clipboard.writeText(text).then(function() {
       var btn = document.getElementById('shareBtn');
