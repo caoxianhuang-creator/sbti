@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>赛博人格测试</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0D0D0D;
+      --card: #1A1A2E;
+      --card-hover: #232340;
+      --primary: #FF2D55;
+      --secondary: #00D4FF;
+      --accent: #FFD93D;
+      --text: #FFFFFF;
+      --text-dim: #8B8B9A;
+      --border: #2A2A3E;
+    }
+    html, body { height: 100%; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: "PingFang SC", "Noto Sans SC", system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ===== START SCREEN ===== */
+    #start-screen {
+      text-align: center;
+      padding: 32px 24px;
+      animation: fadeIn 0.6s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .logo-text {
+      font-size: 13px;
+      letter-spacing: 6px;
+      color: var(--text-dim);
+      margin-bottom: 24px;
+      text-transform: uppercase;
+    }
+    .main-title {
+      font-size: clamp(40px, 10vw, 64px);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.1;
+      margin-bottom: 8px;
+    }
+    .main-title sub { font-size: 0.4em; }
+    .subtitle {
+      font-size: 16px;
+      color: var(--text-dim);
+      margin-bottom: 40px;
+      line-height: 1.6;
+    }
+    .start-btn {
+      padding: 16px 48px;
+      background: linear-gradient(135deg, var(--primary), #FF6B8A);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 24px rgba(255, 45, 85, 0.3);
+    }
+    .start-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(255, 45, 85, 0.5);
+    }
+    .start-btn:active { transform: scale(0.97); }
+    .footer-note {
+      margin-top: 32px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    /* ===== QUESTION SCREEN ===== */
+    #question-screen {
+      display: none;
+      width: 100%;
+      max-width: 480px;
+      padding: 32px 24px;
+      text-align: center;
+    }
+    .progress-wrap {
+      margin-bottom: 32px;
+    }
+    .progress-label {
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+      letter-spacing: 1px;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 2px;
+      transition: width 0.4s ease;
+    }
+    .question-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px 24px;
+      animation: slideIn 0.35s ease;
+    }
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .question-text {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 32px;
+      line-height: 1.5;
+    }
+    .options { display: flex; flex-direction: column; gap: 12px; }
+    .option-btn {
+      padding: 18px 20px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      color: var(--text);
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s, transform 0.15s;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .option-btn:hover {
+      border-color: var(--primary);
+      background: var(--card-hover);
+      transform: translateX(4px);
+    }
+    .option-btn:active { transform: scale(0.98); }
+    .option-letter {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 700;
+      flex-shrink: 0;
+      transition: background 0.2s;
+    }
+    .option-btn:hover .option-letter { background: var(--primary); }
+
+    /* ===== RESULT SCREEN ===== */
+    #result-screen {
+      display: none;
+      width: 100%;
+      max-width: 480px;
+      padding: 32px 24px;
+      text-align: center;
+      animation: fadeIn 0.5s ease;
+    }
+    .result-eyebrow {
+      font-size: 12px;
+      letter-spacing: 3px;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+    .result-type {
+      font-size: clamp(48px, 14vw, 72px);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .result-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 4px;
+    }
+    .result-desc {
+      font-size: 14px;
+      color: var(--text-dim);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+    .result-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      margin-bottom: 24px;
+      text-align: left;
+    }
+    .result-card-title {
+      font-size: 12px;
+      color: var(--text-dim);
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+    .dim-bar-wrap { margin-bottom: 12px; }
+    .dim-bar-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+    }
+    .dim-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .dim-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 0.8s ease;
+    }
+    .share-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--secondary), #00A8CC);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(0, 212, 255, 0.25);
+      margin-bottom: 12px;
+    }
+    .share-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0, 212, 255, 0.4); }
+    .share-btn:active { transform: scale(0.98); }
+    .replay-btn {
+      width: 100%;
+      padding: 14px;
+      background: transparent;
+      color: var(--text-dim);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .replay-btn:hover { border-color: var(--text-dim); color: var(--text); }
+    .result-footer {
+      margin-top: 24px;
+      font-size: 11px;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (min-width: 600px) {
+      .options { flex-direction: row; }
+      .option-btn { flex: 1; flex-direction: column; text-align: center; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- START SCREEN -->
+<div id="start-screen">
+  <div class="logo-text">// 赛博人格测试 //</div>
+  <div class="main-title">SBTI<sub>2026</sub></div>
+  <div class="subtitle">5道题 · 32种人格 · 互联网嘴替大赏<br>你是哪一种？</div>
+  <button class="start-btn" id="startBtn">开始测试 →</button>
+  <div class="footer-note">测试结果纯属娱乐 · 请勿当真 · 认真你就输了</div>
+</div>
+
+<!-- QUESTION SCREEN -->
+<div id="question-screen">
+  <div class="progress-wrap">
+    <div class="progress-label">问题 <span id="qNum">1</span> / 5</div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:20%"></div></div>
+  </div>
+  <div class="question-card" id="questionCard">
+    <div class="question-text" id="questionText"></div>
+    <div class="options" id="options"></div>
+  </div>
+</div>
+
+<!-- RESULT SCREEN -->
+<div id="result-screen">
+  <div class="result-eyebrow">你的赛博人格</div>
+  <div class="result-type" id="resultType"></div>
+  <div class="result-name" id="resultName"></div>
+  <div class="result-desc" id="resultDesc"></div>
+  <div class="result-card">
+    <div class="result-card-title">十五维度（伪）</div>
+    <div id="dimBars"></div>
+  </div>
+  <button class="share-btn" id="shareBtn">📤 复制结果发给好友</button>
+  <button class="replay-btn" id="replayBtn">↻ 再测一次</button>
+  <div class="result-footer">本测试仅供娱乐 · 认真你就输了<br>欢迎分享给冤种朋友们</div>
+</div>
+
+<script>
+// ===== DATA =====
+const QUESTIONS = [
+  {
+    text: "周末你通常在干嘛？",
+    opts: [
+      { letter: "A", label: "出门浪，见人，充电", value: "E" },
+      { letter: "B", label: "在家躺着，哪也不去", value: "I" }
+    ]
+  },
+  {
+    text: "朋友聚会你通常是？",
+    opts: [
+      { letter: "A", label: "气氛组，控场王", value: "S" },
+      { letter: "B", label: "角落观察，偶尔接话", value: "N" }
+    ]
+  },
+  {
+    text: "看到坏消息你的反应是？",
+    opts: [
+      { letter: "A", label: "无所谓，明天再说", value: "T" },
+      { letter: "B", label: "完了完了要出事", value: "F" }
+    ]
+  },
+  {
+    text: "周一早上你的状态？",
+    opts: [
+      { letter: "A", label: "斗志满满，开始计划", value: "P" },
+      { letter: "B", label: "能呼吸就不错了", value: "J" }
+    ]
+  },
+  {
+    text: "遇到麻烦你怎么办？",
+    opts: [
+      { letter: "A", label: "正面刚，迎上去", value: "A" },
+      { letter: "B", label: "先摆烂，等它自己好", value: "C" }
+    ]
+  }
+];
+
+const TYPES = {
+  "ETPA": { code: "ESTPA", name: "卷王", en: "The Hustler", desc: "永不停歇的卷王本王，你是朋友圈里的发电机。别人休息你在卷，别人睡觉你还在卷。卷是你的本能，不卷才是异常。", color: "#FF2D55" },
+  "ETPC": { code: "ESTPC", name: "硬刚王", en: "The Fighter", desc: "遇到困难直接上，从不绕路。管你是谁，管你什么规则，硬刚到底。输赢不重要，气势不能输。", color: "#FF6B35" },
+  "ETFA": { code: "ESTFA", name: "乐观牛", en: "The Sunny Ox", desc: "负面新闻？、国际局势？别看了影响心情。你是朋友圈的阳光，空气净化器本人。", color: "#FFD93D" },
+  "ETFC": { code: "ESTFC", name: "自由人", en: "The Chiller", desc: "卷了这么久，该休息了。躺平是人生哲学，放过自己才是第一要务。你的格言：差不多就行了。", color: "#00D4FF" },
+  "ESPA": { code: "ESNPA", name: "社牛卷王", en: "The Networker", desc: "人脉就是钱脉，你深谙此道。吃饭要拍照，拍照要发圈，发圈要@人。卷和社交两不误，卷王中的战斗机。", color: "#FF9F1C" },
+  "ESPC": { code: "ESNPC", name: "社牛战士", en: "The Charmer", desc: "既能聊又能刚，你是人群中的亮点。硬刚 + 社交牛杂质的结合体，所到之处，皆是战场也是秀场。", color: "#E91E8C" },
+  "ESFA": { code: "ESNFA", name: "开心果", en: "The Vibes", desc: "你是气氛组组长，乐观能量发射器。跟你待久了会变傻，傻得很开心那种。社交牛杂+乐观怪属性拉满。", color: "#FF69B4" },
+  "ESFC": { code: "ESNFC", name: "躺平社牛", en: "The LifeEnjoyer", desc: "社交满分，躺平至上。能不出门绝不出门，能躺着绝不坐着。但一个电话来，你又在派对了。", color: "#00BCD4" },
+  "EIPA": { code: "EITPA", name: "独狼卷", en: "The SoloGrind", desc: "一个人卷，安静地卷。你不需要观众，卷是为了自己。孤独是你最好的充电方式，沉默是你最强的武器。", color: "#8B5CF6" },
+  "EIPC": { code: "EITPC", name: "硬刚独狼", en: "The LoneWolf", desc: "不需要队友，不需要建议。遇到问题一个人扛，扛不住就硬刚。你是孤岛上的战斗机，独立自主的代名词。", color: "#EC4899" },
+  "EIFA": { code: "EITFA", name: "独行乐", en: "The LoneFun", desc: "一个人也能很开心？你就是答案。不依赖外界，自身就是快乐源泉。独处时你最强大，也最自在。", color: "#10B981" },
+  "EIFC": { code: "EITFC", name: "独行侠", en: "The Hermit", desc: "低质量社交不如没有，你信奉精英社交。朋友不在多，在于懂你。你是独行侠，大隐隐于市的那种。", color: "#6366F1" },
+  "ENPA": { code: "ENNPA", name: "社交元人", en: "The Influencer", desc: "人设包装大师，朋友圈经营砖家。你的每条动态都是精心策划，每张照片都价值连城。影响力是你追求的货币。", color: "#F59E0B" },
+  "ENPC": { code: "ENNPC", name: "社交战士", en: "The Connector", desc: "社交 + 硬刚，你是最能刚的社交达人。网上能键政，线下能控场，战斗力与凝聚力同时拉满。", color: "#EF4444" },
+  "ENFA": { code: "ENNFA", name: "社牛乐观", en: "The EternalOptimist", desc: "永远正能量，永远笑嘻嘻。悲观这种情绪跟你没关系，天塌下来有乐观顶着，你是朋友圈的人形暖宝宝。", color: "#14B8A6" },
+  "ENFC": { code: "ENNFC", name: "人间清醒", en: "The ZenMaster", desc: "社交懒，低欲望，看透一切。你的心态稳如老狗，不争不抢不焦虑。人间清醒就是你的人生标签。", color: "#64748B" },
+  "ITPA": { code: "ISTPA", name: "老黄牛", en: "The SilentWorker", desc: "埋头干活不说话，卷是默默卷。你不求关注，只求结果。别人不知道你在卷，但成果说明一切。", color: "#84CC16" },
+  "ITPC": { code: "ISTPC", name: "守望者", en: "The Guardian", desc: "默默守护稳稳输出，你是那个永远靠谱的人。不说硬话，不做软事，但关键时刻从不缺席。", color: "#0EA5E9" },
+  "ITFA": { code: "ISTFA", name: "内卷乐", en: "The HappyGrinder", desc: "卷并快乐着，这是你的超能力。别人卷是痛苦，你卷是享受。你是那种让同事感到压力的卷王（褒义）。", color: "#22C55E" },
+  "ITFC": { code: "ISTFC", name: "独行躺王", en: "The DisciplinedSlacker", desc: "表面躺实际卷，你是隐藏王者。看起来与世无争，背地里疯狂努力。你是卷王中的伪装者。", color: "#7C3AED" },
+  "INPA": { code: "ISNPA", name: "策划人", en: "The Strategist", desc: "暗中观察谋划一切，你是朋友圈的军师。不出手则已，出手就是王炸。思想是你最锋利的武器。", color: "#F97316" },
+  "INPC": { code: "ISNPC", name: "冷面刚", en: "The IronCold", desc: "社恐但硬刚，不鸣则已一鸣惊人。你不是不会社交，只是不想社交。真到关键时刻，你是那个站出来的人。", color: "#1D4ED8" },
+  "INFA": { code: "ISNFA", name: "独处达人", en: "The HappyAlone", desc: "独处且快乐，孤独是你的好朋友。一个人吃饭旅行到处走停停，你是自己最好的陪伴。", color: "#06B6D4" },
+  "INFC": { code: "ISNFC", name: "淡定王者", en: "The IceKing", desc: "什么都与我无关，你是最淡定的人。大事小事在你眼里都是小事，天塌不塌先看有没有砸到我。", color: "#475569" },
+  "JTPA": { code: "INTPA", name: "卷神", en: "The GrindLord", desc: "最高级的卷，卷到无怨无悔。你是那种让猎头都头疼的人才，因为没有合适的职位能跟上你的节奏。", color: "#DC2626" },
+  "JTPC": { code: "INTPC", name: "思想钢印", en: "The Ideologue", desc: "我认为对的就是对的，这是你的信条。信念坚定不动摇，你是行走的价值观，所见之处皆是你的领地。", color: "#9333EA" },
+  "JTFA": { code: "INTFA", name: "理想主义者", en: "The Dreamer", desc: "内心戏很多，理想很丰满。你活在自己构建的完美世界里，并为此默默努力。理想主义是你的翅膀。", color: "#0D9488" },
+  "JTFC": { code: "INTFC", name: "摆烂大师", en: "The Procrastinator", desc: "想卷但躺着更舒服，这是你的人生。明日复明日，明日还明日。你是摆烂界的大师，领军人物。", color: "#78716C" },
+  "JNPA": { code: "INNPA", name: "大V", en: "The Influencer", desc: "影响力玩家，粉丝就是力量。你深谙传播之道，每一条内容都是精心计算。网红经济，你是最认真的玩家。", color: "#DB2777" },
+  "JNPC": { code: "INNPC", name: "键盘侠", en: "The KeyboardWarrior", desc: "网上重拳出击，线下岁月静好。你的键盘是你的武器，你的屏幕是你的战场。义正言辞是你战斗的姿态。", color: "#B91C1C" },
+  "JNFA": { code: "INNFA", name: "彩虹屁", en: "The EgoTrip", desc: "自我感觉超级好，你是自己的第一粉丝。自信爆棚的你，每一天都在给自己打气。自信是最好的医美。", color: "#EA580C" },
+  "JNFC": { code: "INNFC", name: "互联网嘴替", en: "The Troll", desc: "专业嘴替，你想说的正是大家想说而不敢说的。你的评论区永远比正文精彩，你是互联网嘴替第一人。", color: "#9D174D" }
+};
+
+const DIM_LABELS = [
+  ["输出型", "囤积型"],
+  ["社牛", "社恐"],
+  ["乐观怪", "焦虑怪"],
+  ["卷王", "躺平师"],
+  ["硬刚", "摆烂"]
+];
+
+// ===== STATE =====
+let answers = [];
+let curQ = 0;
+
+// ===== INIT =====
+document.getElementById('startBtn').addEventListener('click', startTest);
+document.getElementById('shareBtn').addEventListener('click', shareResult);
+document.getElementById('replayBtn').addEventListener('click', () => location.reload());
+
+function startTest() {
+  answers = [];
+  curQ = 0;
+  document.getElementById('start-screen').style.display = 'none';
+  document.getElementById('question-screen').style.display = 'block';
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = QUESTIONS[curQ];
+  document.getElementById('qNum').textContent = curQ + 1;
+  document.getElementById('progressFill').style.width = ((curQ + 1) / 5 * 100) + '%';
+  document.getElementById('questionText').textContent = q.text;
+
+  const optsEl = document.getElementById('options');
+  optsEl.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `<span class="option-letter">${opt.letter}</span><span>${opt.label}</span>`;
+    btn.addEventListener('click', () => pickAnswer(opt.value));
+    optsEl.appendChild(btn);
+  });
+
+  // Re-trigger animation
+  const card = document.getElementById('questionCard');
+  card.style.animation = 'none';
+  card.offsetHeight;
+  card.style.animation = 'slideIn 0.35s ease';
+}
+
+function pickAnswer(val) {
+  answers.push(val);
+  curQ++;
+  if (curQ < QUESTIONS.length) {
+    showQuestion();
+  } else {
+    showResult();
+  }
+}
+
+function showResult() {
+  document.getElementById('question-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+
+  const key = answers.join('');
+  const t = TYPES[key] || TYPES["JNFC"]; // fallback
+
+  document.getElementById('resultType').textContent = t.code;
+  document.getElementById('resultName').textContent = t.name;
+  document.getElementById('resultDesc').textContent = t.desc;
+
+  // Dimension bars
+  const barsEl = document.getElementById('dimBars');
+  barsEl.innerHTML = '';
+  answers.forEach((a, i) => {
+    const isA = a === QUESTIONS[i].opts[0].value;
+    const pct = isA ? 65 + Math.random() * 30 : 35 + Math.random() * 30;
+    const wrap = document.createElement('div');
+    wrap.className = 'dim-bar-wrap';
+    wrap.innerHTML = `
+      <div class="dim-bar-label">
+        <span>${isA ? DIM_LABELS[i][0] : DIM_LABELS[i][1]}</span>
+        <span>${Math.round(pct)}%</span>
+      </div>
+      <div class="dim-bar">
+        <div class="dim-bar-fill" style="width:0%;background:${isA ? t.color : '#00D4FF'}"></div>
+      </div>
+    `;
+    barsEl.appendChild(wrap);
+    // Animate
+    setTimeout(() => {
+      wrap.querySelector('.dim-bar-fill').style.width = pct + '%';
+    }, 100 + i * 100);
+  });
+}
+
+function shareResult() {
+  const t = TYPES[answers.join('')] || TYPES["JNFC"];
+  const text = `我的赛博人格：【${t.code} ${t.name}】\n${t.desc}\n\n#赛博人格测试 #SBTI\nsbti-test`;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = document.getElementById('shareBtn');
+      btn.textContent = '✅ 已复制！快去粘贴';
+      setTimeout(() => { btn.textContent = '📤 复制结果发给好友'; }, 2000);
+    });
+  } else {
+    prompt('复制这段文字：', text);
+  }
+}
+</script>
+</body>
+</html>
