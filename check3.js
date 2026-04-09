@@ -5,7 +5,7 @@ var scriptMatch = html.match(/<script>([\s\S]*?)<\/script>/);
 var script = scriptMatch[1];
 try {
   new vm.Script(script, { filename: 'test.js' });
-  console.log('SCRIPT COMPILE: OK');
+  console.log('JS COMPILE: OK');
 } catch(e) {
   console.log('ERROR:', e.message);
   var m = e.stack.match(/test\.js:(\d+)/);
