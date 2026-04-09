@@ -3,16 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>赛博人格测试</title>
+  <title>赛博人格测试 SBTI</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --bg: #0D0D0D;
       --card: #1A1A2E;
-      --card-hover: #232340;
+      --card2: #16162A;
       --primary: #FF2D55;
       --secondary: #00D4FF;
       --accent: #FFD93D;
+      --purple: #A855F7;
+      --green: #22C55E;
       --text: #FFFFFF;
       --text-dim: #8B8B9A;
       --border: #2A2A3E;
@@ -31,474 +33,450 @@
       -webkit-font-smoothing: antialiased;
     }
 
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+    @keyframes slideIn { from { opacity:0; transform:translateX(30px); } to { opacity:1; transform:translateX(0); } }
+    @keyframes popIn { 0%{transform:scale(0.8);opacity:0} 70%{transform:scale(1.05)} 100%{transform:scale(1);opacity:1} }
+    @keyframes shimmer { 0%{background-position:-200%} 100%{background-position:200%} }
+
+    /* ===== SHARED ===== */
+    .container { width: 100%; max-width: 520px; padding: 0 20px; }
+    .screen { display: none; }
+    .screen.active { display: block; animation: fadeIn 0.4s ease; }
+    .pill-badge {
+      display: inline-block; padding: 4px 12px; border-radius: 20px;
+      font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase;
+    }
+
     /* ===== START SCREEN ===== */
-    #start-screen {
-      text-align: center;
-      padding: 32px 24px;
-      animation: fadeIn 0.6s ease;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    .logo-text {
-      font-size: 13px;
-      letter-spacing: 6px;
-      color: var(--text-dim);
-      margin-bottom: 24px;
-      text-transform: uppercase;
-    }
-    .main-title {
-      font-size: clamp(40px, 10vw, 64px);
-      font-weight: 900;
-      background: linear-gradient(135deg, var(--primary), var(--secondary));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      line-height: 1.1;
-      margin-bottom: 8px;
-    }
-    .main-title sub { font-size: 0.4em; }
-    .subtitle {
-      font-size: 16px;
-      color: var(--text-dim);
-      margin-bottom: 40px;
-      line-height: 1.6;
-    }
+    #start-screen { text-align: center; padding: 32px 20px; animation: fadeUp 0.6s ease; }
+    .logo-row { margin-bottom: 28px; }
+    .logo-icon { font-size: 48px; margin-bottom: 12px; }
+    .logo-sub { font-size: 11px; letter-spacing: 4px; color: var(--text-dim); text-transform: uppercase; }
+    .main-title { font-size: clamp(44px, 12vw, 64px); font-weight: 900; line-height: 1; margin-bottom: 8px; }
+    .title-sbti { background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .title-year { font-size: 16px; color: var(--text-dim); font-weight: 400; }
+    .subtitle { font-size: 15px; color: var(--text-dim); margin: 20px 0 36px; line-height: 1.7; }
     .start-btn {
-      padding: 16px 48px;
-      background: linear-gradient(135deg, var(--primary), #FF6B8A);
-      color: white;
-      border: none;
-      border-radius: 50px;
-      font-size: 16px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-      box-shadow: 0 4px 24px rgba(255, 45, 85, 0.3);
+      padding: 16px 56px; background: linear-gradient(135deg, var(--primary), #FF6B8A);
+      color: white; border: none; border-radius: 50px; font-size: 16px; font-weight: 700;
+      cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 4px 24px rgba(255,45,85,0.35);
     }
-    .start-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 32px rgba(255, 45, 85, 0.5);
-    }
+    .start-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(255,45,85,0.5); }
     .start-btn:active { transform: scale(0.97); }
-    .footer-note {
-      margin-top: 32px;
-      font-size: 12px;
-      color: var(--text-dim);
-    }
+    .stats-row { display: flex; justify-content: center; gap: 32px; margin-top: 36px; }
+    .stat-item { text-align: center; }
+    .stat-num { font-size: 22px; font-weight: 800; color: var(--secondary); }
+    .stat-label { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+    .disclaimer { margin-top: 28px; font-size: 11px; color: var(--text-dim); line-height: 1.6; }
 
     /* ===== QUESTION SCREEN ===== */
-    #question-screen {
-      display: none;
-      width: 100%;
-      max-width: 480px;
-      padding: 32px 24px;
-      text-align: center;
+    #question-screen { padding: 24px 20px 40px; }
+    .q-progress { margin-bottom: 28px; }
+    .q-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .q-counter { font-size: 13px; color: var(--text-dim); }
+    .q-counter span { color: var(--primary); font-weight: 700; }
+    .q-dim-label { font-size: 11px; padding: 3px 10px; border-radius: 20px; background: var(--card); color: var(--text-dim); }
+    .progress-track { width: 100%; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 2px; transition: width 0.4s ease; }
+    .q-card { background: var(--card); border: 1px solid var(--border); border-radius: 24px; padding: 36px 24px; animation: slideIn 0.3s ease; }
+    .q-text { font-size: 19px; font-weight: 600; line-height: 1.55; margin-bottom: 28px; }
+    .q-opts { display: flex; flex-direction: column; gap: 10px; }
+    .q-opt {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px 18px; background: var(--bg); border: 1.5px solid var(--border);
+      border-radius: 14px; color: var(--text); font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: border-color 0.2s, background 0.2s, transform 0.15s; text-align: left;
     }
-    .progress-wrap {
-      margin-bottom: 32px;
+    .q-opt:hover { border-color: var(--primary); background: #1E1E38; transform: translateX(3px); }
+    .q-opt:active { transform: scale(0.98); }
+    .q-opt-letter {
+      width: 30px; height: 30px; border-radius: 8px; background: var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px; font-weight: 800; flex-shrink: 0; transition: background 0.2s;
     }
-    .progress-label {
-      font-size: 12px;
-      color: var(--text-dim);
-      margin-bottom: 8px;
-      letter-spacing: 1px;
-    }
-    .progress-bar {
-      width: 100%;
-      height: 4px;
-      background: var(--border);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary), var(--secondary));
-      border-radius: 2px;
-      transition: width 0.4s ease;
-    }
-    .question-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 40px 24px;
-      animation: slideIn 0.35s ease;
-    }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateX(30px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-    .question-text {
-      font-size: 20px;
-      font-weight: 600;
-      margin-bottom: 32px;
-      line-height: 1.5;
-    }
-    .options { display: flex; flex-direction: column; gap: 12px; }
-    .option-btn {
-      padding: 18px 20px;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      color: var(--text);
-      font-size: 15px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: border-color 0.2s, background 0.2s, transform 0.15s;
-      text-align: left;
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-    .option-btn:hover {
-      border-color: var(--primary);
-      background: var(--card-hover);
-      transform: translateX(4px);
-    }
-    .option-btn:active { transform: scale(0.98); }
-    .option-letter {
-      width: 32px;
-      height: 32px;
-      border-radius: 10px;
-      background: var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: 700;
-      flex-shrink: 0;
-      transition: background 0.2s;
-    }
-    .option-btn:hover .option-letter { background: var(--primary); }
+    .q-opt:hover .q-opt-letter { background: var(--primary); }
 
     /* ===== RESULT SCREEN ===== */
-    #result-screen {
-      display: none;
-      width: 100%;
-      max-width: 480px;
-      padding: 32px 24px;
-      text-align: center;
-      animation: fadeIn 0.5s ease;
+    #result-screen { padding: 28px 20px 48px; text-align: center; animation: fadeIn 0.5s ease; }
+    .result-badge { animation: fadeUp 0.5s ease 0.1s both; }
+    .result-eyebrow { font-size: 11px; letter-spacing: 3px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 12px; }
+    .result-type-badge {
+      display: inline-block; padding: 8px 24px; border-radius: 16px;
+      font-size: 14px; font-weight: 900; letter-spacing: 2px;
+      background: linear-gradient(135deg, var(--primary), var(--purple));
+      margin-bottom: 8px;
     }
-    .result-eyebrow {
-      font-size: 12px;
-      letter-spacing: 3px;
-      color: var(--text-dim);
-      margin-bottom: 16px;
-      text-transform: uppercase;
+    .result-main-type {
+      font-size: clamp(64px, 18vw, 88px); font-weight: 900; line-height: 1;
+      background: linear-gradient(135deg, var(--primary), var(--accent), var(--secondary));
+      background-size: 200% auto;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      animation: shimmer 3s linear infinite; margin: 8px 0;
     }
-    .result-type {
-      font-size: clamp(48px, 14vw, 72px);
-      font-weight: 900;
-      background: linear-gradient(135deg, var(--primary), var(--accent));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      line-height: 1;
-      margin-bottom: 4px;
-    }
-    .result-name {
-      font-size: 22px;
-      font-weight: 700;
-      color: var(--secondary);
-      margin-bottom: 4px;
-    }
-    .result-desc {
-      font-size: 14px;
-      color: var(--text-dim);
-      margin-bottom: 32px;
-      line-height: 1.6;
-    }
-    .result-card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 24px;
-      margin-bottom: 24px;
-      text-align: left;
-    }
-    .result-card-title {
-      font-size: 12px;
-      color: var(--text-dim);
-      letter-spacing: 1px;
-      margin-bottom: 16px;
-      text-transform: uppercase;
-    }
-    .dim-bar-wrap { margin-bottom: 12px; }
-    .dim-bar-label {
-      display: flex;
-      justify-content: space-between;
-      font-size: 13px;
-      color: var(--text-dim);
-      margin-bottom: 6px;
-    }
-    .dim-bar {
-      height: 6px;
-      background: var(--border);
-      border-radius: 3px;
-      overflow: hidden;
-    }
-    .dim-bar-fill {
-      height: 100%;
-      border-radius: 3px;
-      transition: width 0.8s ease;
-    }
-    .share-btn {
-      width: 100%;
-      padding: 16px;
-      background: linear-gradient(135deg, var(--secondary), #00A8CC);
-      color: white;
-      border: none;
-      border-radius: 16px;
-      font-size: 15px;
-      font-weight: 700;
-      cursor: pointer;
-      transition: transform 0.15s, box-shadow 0.2s;
-      box-shadow: 0 4px 20px rgba(0, 212, 255, 0.25);
-      margin-bottom: 12px;
-    }
-    .share-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0, 212, 255, 0.4); }
-    .share-btn:active { transform: scale(0.98); }
-    .replay-btn {
-      width: 100%;
-      padding: 14px;
-      background: transparent;
-      color: var(--text-dim);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      font-size: 14px;
-      cursor: pointer;
-      transition: border-color 0.2s, color 0.2s;
-    }
-    .replay-btn:hover { border-color: var(--text-dim); color: var(--text); }
-    .result-footer {
-      margin-top: 24px;
-      font-size: 11px;
-      color: var(--text-dim);
-      line-height: 1.6;
+    .result-name { font-size: 26px; font-weight: 800; color: var(--secondary); margin-bottom: 6px; }
+    .result-tagline { font-size: 13px; color: var(--text-dim); margin-bottom: 28px; line-height: 1.6; }
+    .result-divider { width: 60px; height: 3px; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 2px; margin: 0 auto 24px; }
+
+    /* 15 Dimensions */
+    .dims-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 20px; text-align: left; animation: fadeUp 0.5s ease 0.2s both; }
+    .dims-title { font-size: 11px; letter-spacing: 2px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 6px; }
+    .dims-grid { display: grid; grid-template-columns: 1fr 1px 1fr; gap: 0 16px; }
+    .dim-item { margin-bottom: 14px; }
+    .dim-name { font-size: 12px; color: var(--text-dim); margin-bottom: 5px; display: flex; justify-content: space-between; }
+    .dim-name span { color: var(--text); font-weight: 600; }
+    .dim-track { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+    .dim-fill { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
+    .dim-sep { background: var(--border); width: 1px; }
+
+    /* Description card */
+    .desc-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 20px; text-align: left; animation: fadeUp 0.5s ease 0.3s both; }
+    .desc-title { font-size: 13px; font-weight: 700; margin-bottom: 10px; color: var(--accent); }
+    .desc-text { font-size: 14px; color: var(--text-dim); line-height: 1.8; }
+    .trait-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .trait-chip {
+      padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
+      border: 1px solid; transition: all 0.2s;
     }
 
-    /* ===== RESPONSIVE ===== */
-    @media (min-width: 600px) {
-      .options { flex-direction: row; }
-      .option-btn { flex: 1; flex-direction: column; text-align: center; gap: 10px; }
+    /* Compatibility */
+    .compat-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 20px; margin-bottom: 20px; text-align: left; animation: fadeUp 0.5s ease 0.4s both; }
+    .compat-title { font-size: 13px; font-weight: 700; margin-bottom: 12px; color: var(--purple); }
+    .compat-items { display: flex; flex-direction: column; gap: 8px; }
+    .compat-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--text-dim); }
+    .compat-icon { font-size: 16px; }
+    .compat-type { font-weight: 800; color: var(--text); }
+
+    /* Share */
+    .share-btn {
+      width: 100%; padding: 16px; background: linear-gradient(135deg, var(--secondary), #0099CC);
+      color: white; border: none; border-radius: 16px; font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 4px 20px rgba(0,212,255,0.25); margin-bottom: 10px;
+    }
+    .share-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(0,212,255,0.4); }
+    .replay-btn {
+      width: 100%; padding: 14px; background: transparent; color: var(--text-dim);
+      border: 1px solid var(--border); border-radius: 16px; font-size: 14px;
+      cursor: pointer; transition: border-color 0.2s, color 0.2s; margin-bottom: 24px;
+    }
+    .replay-btn:hover { border-color: var(--text-dim); color: var(--text); }
+    .result-footer { font-size: 11px; color: var(--text-dim); line-height: 1.7; }
+
+    @media (max-width: 380px) {
+      .dims-grid { grid-template-columns: 1fr; gap: 0; }
+      .dim-sep { display: none; }
     }
   </style>
 </head>
 <body>
 
-<!-- START SCREEN -->
-<div id="start-screen">
-  <div class="logo-text">// 赛博人格测试 //</div>
-  <div class="main-title">SBTI<sub>2026</sub></div>
-  <div class="subtitle">5道题 · 32种人格 · 互联网嘴替大赏<br>你是哪一种？</div>
-  <button class="start-btn" id="startBtn">开始测试 →</button>
-  <div class="footer-note">测试结果纯属娱乐 · 请勿当真 · 认真你就输了</div>
+<!-- ===== START SCREEN ===== -->
+<div id="start-screen" class="screen active">
+  <div class="container">
+    <div class="logo-row">
+      <div class="logo-icon">🤖</div>
+      <div class="logo-sub">// 赛博人格测试 //</div>
+    </div>
+    <div class="main-title">
+      <div class="title-sbti">SBTI</div>
+      <div class="title-year">2026</div>
+    </div>
+    <div class="subtitle">
+      30道题 · 32种人格 · 互联网嘴替大赏<br>
+      你是哪一种牛马？
+    </div>
+    <button class="start-btn" id="startBtn">开始测试 →</button>
+    <div class="stats-row">
+      <div class="stat-item"><div class="stat-num">32</div><div class="stat-label">种人格类型</div></div>
+      <div class="stat-item"><div class="stat-num">30</div><div class="stat-label">道精选题</div></div>
+      <div class="stat-item"><div class="stat-num">15</div><div class="stat-label">维度分析</div></div>
+    </div>
+    <div class="disclaimer">测试结果纯属娱乐 · 请勿当真 · 认真你就输了<br>本测试原型来自 B站@蛆肉儿串儿</div>
+  </div>
 </div>
 
-<!-- QUESTION SCREEN -->
-<div id="question-screen">
-  <div class="progress-wrap">
-    <div class="progress-label">问题 <span id="qNum">1</span> / 5</div>
-    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:20%"></div></div>
-  </div>
-  <div class="question-card" id="questionCard">
-    <div class="question-text" id="questionText"></div>
-    <div class="options" id="options"></div>
+<!-- ===== QUESTION SCREEN ===== -->
+<div id="question-screen" class="screen">
+  <div class="container">
+    <div class="q-progress">
+      <div class="q-top">
+        <div class="q-counter"><span id="qNum">1</span> / 30</div>
+        <div class="q-dim-label" id="dimLabel">能量来源</div>
+      </div>
+      <div class="progress-track"><div class="progress-fill" id="progFill" style="width:3.33%"></div></div>
+    </div>
+    <div class="q-card" id="qCard">
+      <div class="q-text" id="qText"></div>
+      <div class="q-opts" id="qOpts"></div>
+    </div>
   </div>
 </div>
 
-<!-- RESULT SCREEN -->
-<div id="result-screen">
-  <div class="result-eyebrow">你的赛博人格</div>
-  <div class="result-type" id="resultType"></div>
-  <div class="result-name" id="resultName"></div>
-  <div class="result-desc" id="resultDesc"></div>
-  <div class="result-card">
-    <div class="result-card-title">十五维度（伪）</div>
-    <div id="dimBars"></div>
+<!-- ===== RESULT SCREEN ===== -->
+<div id="result-screen" class="screen">
+  <div class="container">
+    <div class="result-badge">
+      <div class="result-eyebrow">你的赛博人格</div>
+      <div class="result-type-badge" id="resBadge">ESTPA</div>
+    </div>
+    <div class="result-main-type" id="resName">卷王</div>
+    <div class="result-tagline" id="resTagline">说做就做，不负当下</div>
+    <div class="result-divider"></div>
+
+    <div class="dims-card">
+      <div class="dims-title">📊 十五维度（伪）</div>
+      <div class="dims-grid" id="dimsGrid"></div>
+    </div>
+
+    <div class="desc-card">
+      <div class="desc-title">📝 人格解读</div>
+      <div class="desc-text" id="resDesc"></div>
+      <div class="trait-chips" id="resChips"></div>
+    </div>
+
+    <div class="compat-card">
+      <div class="compat-title">💞 速配人格</div>
+      <div class="compat-items" id="compatList"></div>
+    </div>
+
+    <button class="share-btn" id="shareBtn">📤 复制结果发给好友</button>
+    <button class="replay-btn" id="replayBtn">↻ 再测一次</button>
+    <div class="result-footer">
+      本测试仅供娱乐 · 认真你就输了<br>
+      欢迎分享给冤种朋友们 · @蛆肉儿串儿
+    </div>
   </div>
-  <button class="share-btn" id="shareBtn">📤 复制结果发给好友</button>
-  <button class="replay-btn" id="replayBtn">↻ 再测一次</button>
-  <div class="result-footer">本测试仅供娱乐 · 认真你就输了<br>欢迎分享给冤种朋友们</div>
 </div>
 
 <script>
-// ===== DATA =====
-const QUESTIONS = [
-  {
-    text: "周末你通常在干嘛？",
-    opts: [
-      { letter: "A", label: "出门浪，见人，充电", value: "E" },
-      { letter: "B", label: "在家躺着，哪也不去", value: "I" }
-    ]
-  },
-  {
-    text: "朋友聚会你通常是？",
-    opts: [
-      { letter: "A", label: "气氛组，控场王", value: "S" },
-      { letter: "B", label: "角落观察，偶尔接话", value: "N" }
-    ]
-  },
-  {
-    text: "看到坏消息你的反应是？",
-    opts: [
-      { letter: "A", label: "无所谓，明天再说", value: "T" },
-      { letter: "B", label: "完了完了要出事", value: "F" }
-    ]
-  },
-  {
-    text: "周一早上你的状态？",
-    opts: [
-      { letter: "A", label: "斗志满满，开始计划", value: "P" },
-      { letter: "B", label: "能呼吸就不错了", value: "J" }
-    ]
-  },
-  {
-    text: "遇到麻烦你怎么办？",
-    opts: [
-      { letter: "A", label: "正面刚，迎上去", value: "A" },
-      { letter: "B", label: "先摆烂，等它自己好", value: "C" }
-    ]
-  }
+// ===== DIMENSIONS =====
+const DIMS = [
+  { name: '能量来源', dimA: '输出型 E', dimB: '囤积型 I', letter: 'EI' },
+  { name: '信息获取', dimA: '观察者 S', dimB: '直觉者 N', letter: 'SN' },
+  { name: '决策方式', dimA: '理性派 T', dimB: '感觉派 F', letter: 'TF' },
+  { name: '生活态度', dimA: '计划派 J', dimB: '随性派 P', letter: 'JP' },
+  { name: '应对姿态', dimA: '硬刚型 A', dimB: '摆烂型 C', letter: 'AC' },
+  { name: '社交模式', dimA: '社牛 S', dimB: '社恐 N', letter: 'SN2' },
+  { name: '情绪底色', dimA: '乐观派 O', dimB: '焦虑派 A', letter: 'OA' },
+  { name: '成就导向', dimA: '卷王 H', dimB: '躺平 L', letter: 'HL' },
 ];
 
+const DIM_COLORS = ['#FF2D55','#00D4FF','#FFD93D','#A855F7','#22C55E','#FF9F1C','#EC4899','#0EA5E9'];
+
+// ===== QUESTIONS =====
+const QS = [
+  // D0: EI - 能量来源
+  { d:0, q:"周末你通常在干嘛？", a:[{l:"A",t:"出门浪，见人，充电"},{l:"B",t:"在家躺着，哪也不去"}] },
+  { d:0, q:"聊天时你是先打字还是等对方回？", a:[{l:"A",t:"我先开口，主动破冰"},{l:"B",t:"等对方先说，我再接"}] },
+  { d:0, q:"一个人待久了你会？", a:[{l:"A",t:"想出门找点事做"},{l:"B",t:"享受独处的快乐"}] },
+  { d:0, q:"在聚会上你通常是？", a:[{l:"A",t:"气氛发动机，大家围着我转"},{l:"B",t:"角落里默默观察的存在"}] },
+  { d:0, q:"你的工作动力主要来自？", a:[{l:"A",t:"跟人互动碰撞出火花"},{l:"B",t:"一个人安静思考的满足感"}] },
+  { d:0, q:"说到「周末计划」，你更常的状态是？", a:[{l:"A",t:"已经约了一堆人"},{l:"B",t:"还没想好，看心情"}] },
+
+  // D1: SN - 信息获取
+  { d:1, q:"你看人主要看什么？", a:[{l:"A",t:"做了什么事，说了什么话"},{l:"B",t:"感觉和气场，直觉告诉我TA是怎样的人"}] },
+  { d:1, q:"你更关注？", a:[{l:"A",t:"眼前的实际细节"},{l:"B",t:"未来的可能性和想象"}] },
+  { d:1, q:"老板布置任务时你更想了解？", a:[{l:"A",t:"具体的执行步骤和时间节点"},{l:"B",t:"为什么做这件事，意义是什么"}] },
+  { d:1, q:"面对一个新项目你的开场是？", a:[{l:"A",t:"先研究现有资料和案例"},{l:"B",t:"先想象它做成了会是什么样"}] },
+  { d:1, q:"朋友跟你抱怨事情，你更常的反应是？", a:[{l:"A",t:"给具体的解决方案"},{l:"B",t:"理解情绪，共情TA的不爽"}] },
+  { d:1, q:"你喜欢什么样的内容？", a:[{l:"A",t:"实操干货，有步骤有方法"},{l:"B",t:"有深度的分析和洞察"}] },
+
+  // D2: TF - 决策方式
+  { d:2, q:"你更看重？", a:[{l:"A",t:"这件事是不是合理、说得通"},{l:"B",t:"大家的感受和氛围怎么样"}] },
+  { d:2, q:"发生冲突时你倾向于？", a:[{l:"A",t:"先讲道理，分清对错"},{l:"B",t:"先照顾情绪，回头再算账"}] },
+  { d:2, q:"你更愿意被形容为？", a:[{l:"A",t:"理性、冷静、有逻辑"},{l:"B",t:"温暖、善解人意、有同理心"}] },
+  { d:2, q:"做决定时你会？", a:[{l:"A",t:"分析利弊，客观评估"},{l:"B",t:"考虑人的感受，哪个更让大家好受"}] },
+  { d:2, q:"你更认可的成功是？", a:[{l:"A",t:"解决了多少问题，创造了多少价值"},{l:"B",t:"影响了多少人，带来了多少温暖"}] },
+  { d:2, q:"当朋友问「我该怎么办」时你通常？", a:[{l:"A",t:"给出最优解和执行路径"},{l:"B",t:"陪伴倾听，让他自己想清楚"}] },
+
+  // D3: JP - 生活态度
+  { d:3, q:"你的办公桌通常是什么状态？", a:[{l:"A",t:"整齐有序，什么都在该在的位置"},{l:"B",t:"乱中有序，我知道我的东西在哪"}] },
+  { d:3, q:"出门前你通常会？", a:[{l:"A",t:"提前计划好一切，可能还做了预案"},{l:"B",t:"看情况，到时候再说"}] },
+  { d:3, q:"你更接近哪种工作风格？", a:[{l:"A",t:"提前列好清单，一件一件打勾完成"},{l:"B",t:"喜欢多线程推进，弹性工作"}] },
+  { d:3, q:"你对「最后期限」的看法是？", a:[{l:"A",t:"提前完成，不能拖到最后一秒"},{l:"B",t:"最后一天才是生产力巅峰"}] },
+  { d:3, q:"周一早上你的状态？", a:[{l:"A",t:"斗志满满，列好本周计划"},{l:"B",t:"能呼吸就不错了，边走边看"}] },
+  { d:3, q:"旅行时你更喜欢？", a:[{l:"A",t:"攻略详细，行程满满"},{l:"B",t:"睡到自然醒，随性漫游"}] },
+
+  // D4: AC - 应对姿态
+  { d:4, q:"遇到麻烦你第一反应是？", a:[{l:"A",t:"正面刚，马上解决"},{l:"B",t:"先放一放，说不定自己就好了"}] },
+  { d:4, q:"别人对你的评价通常是？", a:[{l:"A",t:"靠谱、能扛事、硬核"},{l:"B",t:"随和、不计较、心大"}] },
+  { d:4, q:"面对困难的任务你的态度是？", a:[{l:"A",t:"迎难而上，搞不定不罢休"},{l:"B",t:"差不多就行了，不必太较真"}] },
+  { d:4, q:"你更常的状态是？", a:[{l:"A",t:"战斗模式，随时备战"},{l:"B",t:"和平模式，能不动就不动"}] },
+  { d:4, q:"遇到不合理的事你会？", a:[{l:"A",t:"当场指出，立刻表达不满"},{l:"B",t:"算了算了，多一事不如少一事"}] },
+  { d:4, q:"你的抗压方式是？", a:[{l:"A",t:"主动出击改变现状"},{l:"B",t:"调整心态接受现实"}] },
+];
+
+// ===== 32 TYPES =====
 const TYPES = {
-  "ETPA": { code: "ESTPA", name: "卷王", en: "The Hustler", desc: "永不停歇的卷王本王，你是朋友圈里的发电机。别人休息你在卷，别人睡觉你还在卷。卷是你的本能，不卷才是异常。", color: "#FF2D55" },
-  "ETPC": { code: "ESTPC", name: "硬刚王", en: "The Fighter", desc: "遇到困难直接上，从不绕路。管你是谁，管你什么规则，硬刚到底。输赢不重要，气势不能输。", color: "#FF6B35" },
-  "ETFA": { code: "ESTFA", name: "乐观牛", en: "The Sunny Ox", desc: "负面新闻？、国际局势？别看了影响心情。你是朋友圈的阳光，空气净化器本人。", color: "#FFD93D" },
-  "ETFC": { code: "ESTFC", name: "自由人", en: "The Chiller", desc: "卷了这么久，该休息了。躺平是人生哲学，放过自己才是第一要务。你的格言：差不多就行了。", color: "#00D4FF" },
-  "ESPA": { code: "ESNPA", name: "社牛卷王", en: "The Networker", desc: "人脉就是钱脉，你深谙此道。吃饭要拍照，拍照要发圈，发圈要@人。卷和社交两不误，卷王中的战斗机。", color: "#FF9F1C" },
-  "ESPC": { code: "ESNPC", name: "社牛战士", en: "The Charmer", desc: "既能聊又能刚，你是人群中的亮点。硬刚 + 社交牛杂质的结合体，所到之处，皆是战场也是秀场。", color: "#E91E8C" },
-  "ESFA": { code: "ESNFA", name: "开心果", en: "The Vibes", desc: "你是气氛组组长，乐观能量发射器。跟你待久了会变傻，傻得很开心那种。社交牛杂+乐观怪属性拉满。", color: "#FF69B4" },
-  "ESFC": { code: "ESNFC", name: "躺平社牛", en: "The LifeEnjoyer", desc: "社交满分，躺平至上。能不出门绝不出门，能躺着绝不坐着。但一个电话来，你又在派对了。", color: "#00BCD4" },
-  "EIPA": { code: "EITPA", name: "独狼卷", en: "The SoloGrind", desc: "一个人卷，安静地卷。你不需要观众，卷是为了自己。孤独是你最好的充电方式，沉默是你最强的武器。", color: "#8B5CF6" },
-  "EIPC": { code: "EITPC", name: "硬刚独狼", en: "The LoneWolf", desc: "不需要队友，不需要建议。遇到问题一个人扛，扛不住就硬刚。你是孤岛上的战斗机，独立自主的代名词。", color: "#EC4899" },
-  "EIFA": { code: "EITFA", name: "独行乐", en: "The LoneFun", desc: "一个人也能很开心？你就是答案。不依赖外界，自身就是快乐源泉。独处时你最强大，也最自在。", color: "#10B981" },
-  "EIFC": { code: "EITFC", name: "独行侠", en: "The Hermit", desc: "低质量社交不如没有，你信奉精英社交。朋友不在多，在于懂你。你是独行侠，大隐隐于市的那种。", color: "#6366F1" },
-  "ENPA": { code: "ENNPA", name: "社交元人", en: "The Influencer", desc: "人设包装大师，朋友圈经营砖家。你的每条动态都是精心策划，每张照片都价值连城。影响力是你追求的货币。", color: "#F59E0B" },
-  "ENPC": { code: "ENNPC", name: "社交战士", en: "The Connector", desc: "社交 + 硬刚，你是最能刚的社交达人。网上能键政，线下能控场，战斗力与凝聚力同时拉满。", color: "#EF4444" },
-  "ENFA": { code: "ENNFA", name: "社牛乐观", en: "The EternalOptimist", desc: "永远正能量，永远笑嘻嘻。悲观这种情绪跟你没关系，天塌下来有乐观顶着，你是朋友圈的人形暖宝宝。", color: "#14B8A6" },
-  "ENFC": { code: "ENNFC", name: "人间清醒", en: "The ZenMaster", desc: "社交懒，低欲望，看透一切。你的心态稳如老狗，不争不抢不焦虑。人间清醒就是你的人生标签。", color: "#64748B" },
-  "ITPA": { code: "ISTPA", name: "老黄牛", en: "The SilentWorker", desc: "埋头干活不说话，卷是默默卷。你不求关注，只求结果。别人不知道你在卷，但成果说明一切。", color: "#84CC16" },
-  "ITPC": { code: "ISTPC", name: "守望者", en: "The Guardian", desc: "默默守护稳稳输出，你是那个永远靠谱的人。不说硬话，不做软事，但关键时刻从不缺席。", color: "#0EA5E9" },
-  "ITFA": { code: "ISTFA", name: "内卷乐", en: "The HappyGrinder", desc: "卷并快乐着，这是你的超能力。别人卷是痛苦，你卷是享受。你是那种让同事感到压力的卷王（褒义）。", color: "#22C55E" },
-  "ITFC": { code: "ISTFC", name: "独行躺王", en: "The DisciplinedSlacker", desc: "表面躺实际卷，你是隐藏王者。看起来与世无争，背地里疯狂努力。你是卷王中的伪装者。", color: "#7C3AED" },
-  "INPA": { code: "ISNPA", name: "策划人", en: "The Strategist", desc: "暗中观察谋划一切，你是朋友圈的军师。不出手则已，出手就是王炸。思想是你最锋利的武器。", color: "#F97316" },
-  "INPC": { code: "ISNPC", name: "冷面刚", en: "The IronCold", desc: "社恐但硬刚，不鸣则已一鸣惊人。你不是不会社交，只是不想社交。真到关键时刻，你是那个站出来的人。", color: "#1D4ED8" },
-  "INFA": { code: "ISNFA", name: "独处达人", en: "The HappyAlone", desc: "独处且快乐，孤独是你的好朋友。一个人吃饭旅行到处走停停，你是自己最好的陪伴。", color: "#06B6D4" },
-  "INFC": { code: "ISNFC", name: "淡定王者", en: "The IceKing", desc: "什么都与我无关，你是最淡定的人。大事小事在你眼里都是小事，天塌不塌先看有没有砸到我。", color: "#475569" },
-  "JTPA": { code: "INTPA", name: "卷神", en: "The GrindLord", desc: "最高级的卷，卷到无怨无悔。你是那种让猎头都头疼的人才，因为没有合适的职位能跟上你的节奏。", color: "#DC2626" },
-  "JTPC": { code: "INTPC", name: "思想钢印", en: "The Ideologue", desc: "我认为对的就是对的，这是你的信条。信念坚定不动摇，你是行走的价值观，所见之处皆是你的领地。", color: "#9333EA" },
-  "JTFA": { code: "INTFA", name: "理想主义者", en: "The Dreamer", desc: "内心戏很多，理想很丰满。你活在自己构建的完美世界里，并为此默默努力。理想主义是你的翅膀。", color: "#0D9488" },
-  "JTFC": { code: "INTFC", name: "摆烂大师", en: "The Procrastinator", desc: "想卷但躺着更舒服，这是你的人生。明日复明日，明日还明日。你是摆烂界的大师，领军人物。", color: "#78716C" },
-  "JNPA": { code: "INNPA", name: "大V", en: "The Influencer", desc: "影响力玩家，粉丝就是力量。你深谙传播之道，每一条内容都是精心计算。网红经济，你是最认真的玩家。", color: "#DB2777" },
-  "JNPC": { code: "INNPC", name: "键盘侠", en: "The KeyboardWarrior", desc: "网上重拳出击，线下岁月静好。你的键盘是你的武器，你的屏幕是你的战场。义正言辞是你战斗的姿态。", color: "#B91C1C" },
-  "JNFA": { code: "INNFA", name: "彩虹屁", en: "The EgoTrip", desc: "自我感觉超级好，你是自己的第一粉丝。自信爆棚的你，每一天都在给自己打气。自信是最好的医美。", color: "#EA580C" },
-  "JNFC": { code: "INNFC", name: "互联网嘴替", en: "The Troll", desc: "专业嘴替，你想说的正是大家想说而不敢说的。你的评论区永远比正文精彩，你是互联网嘴替第一人。", color: "#9D174D" }
+  "ESTPA": { name:"卷王",      tagline:"永不停歇的卷王本王", desc:"你是朋友圈里的发电机。别人休息你在卷，别人睡觉你还在卷。卷是你的本能，不卷才是异常。你是那种让同事感到压力的卷王（褒义）。", traits:[{t:"卷王",c:"#FF2D55"},{t:"行动派",c:"#00D4FF"},{t:"高目标",c:"#FFD93D"},{t:"不服输",c:"#A855F7"}], compat:[{icon:"💀",name:"摆烂侠",type:"ISTFC"},{icon:"🎭",name:"小丑",type:"ENNFC"}], dimScores:[85,40,70,80,95,75,55,90] },
+  "ESTPC": { name:"硬刚王",    tagline:"遇到困难直接上", desc:"遇到困难直接上，从不绕路。管你是谁，管你什么规则，硬刚到底。输赢不重要，气势不能输。你是那种让人又敬又怕的存在。", traits:[{t:"硬刚",c:"#FF2D55"},{t:"不妥协",c:"#EC4899"},{t:"战斗欲",c:"#EF4444"},{t:"强势",c:"#DC2626"}], compat:[{icon:"🧘",name:"佛系",type:"INFLC"},{icon:"🤝",name:"配合型",type:"ISFTC"}], dimScores:[80,35,75,85,90,65,30,75] },
+  "ESTFA": { name:"乐观牛",    tagline:"负面新闻当没看见", desc:"负面新闻？国际局势？别看了影响心情。你是朋友圈的阳光，空气净化器本人。跟你待久了会变傻，傻得很开心那种。", traits:[{t:"乐观",c:"#FFD93D"},{t:"正能量",c:"#22C55E"},{t:"治愈系",c:"#14B8A6"},{t:"心大",c:"#10B981"}], compat:[{icon:"🥲",name:"焦虑怪",type:"INTFA"},{icon:"😶",name:"淡定王",type:"INFLC"}], dimScores:[75,30,20,65,30,85,90,45] },
+  "ESTFC": { name:"自由人",    tagline:"卷了这么久，该休息了", desc:"卷了这么久，该休息了。躺平是人生哲学，放过自己才是第一要务。你的格言：差不多就行了，何必那么累。", traits:[{t:"躺平",c:"#6366F1"},{t:"反内卷",c:"#8B5CF6"},{t:"自洽",c:"#7C3AED"},{t:"松弛感",c:"#A855F7"}], compat:[{icon:"🔥",name:"卷王",type:"ESTPA"},{icon:"⚡",name:"硬刚型",type:"ESTPC"}], dimScores:[70,25,15,20,20,80,85,20] },
+  "ESNPA": { name:"社牛卷王",  tagline:"人脉就是钱脉", desc:"人脉就是钱脉，你深谙此道。吃饭要拍照，拍照要发圈，发圈要@人。卷和社交两不误，卷王中的战斗机。", traits:[{t:"社牛",c:"#FF9F1C"},{t:"卷王",c:"#FF2D55"},{t:"人脉王",c:"#F59E0B"},{t:"控场",c:"#EF4444"}], compat:[{icon:"🦊",name:"独狼",type:"EITPA"},{icon:"🤡",name:"小丑",type:"ESNFC"}], dimScores:[90,45,60,70,85,95,50,85] },
+  "ESNPC": { name:"社牛战士",  tagline:"既能聊又能刚", desc:"既能聊又能刚，你是人群中的亮点。硬刚 + 社交牛杂质的结合体，所到之处，皆是战场也是秀场。", traits:[{t:"社牛",c:"#FF9F1C"},{t:"硬刚",c:"#FF2D55"},{t:"表达力",c:"#E91E8C"},{t:"控场",c:"#EC4899"}], compat:[{icon:"🦉",name:"独行侠",type:"EITFC"},{icon:"🧊",name:"冷面刚",type:"ISNPC"}], dimScores:[88,40,65,75,92,90,35,78] },
+  "ESNFA": { name:"开心果",    tagline:"气氛组组长", desc:"你是气氛组组长，乐观能量发射器。跟你待久了会变傻，傻得很开心那种。社交牛杂+乐观怪属性拉满。", traits:[{t:"开心果",c:"#FF69B4"},{t:"社牛",c:"#FF9F1C"},{t:"乐观",c:"#FFD93D"},{t:"感染力",c:"#22C55E"}], compat:[{icon:"🥲",name:"悲观派",type:"INTFC"},{icon:"🤐",name:"社恐",type:"ISNFC"}], dimScores:[85,35,18,55,25,92,95,40] },
+  "ESNFC": { name:"躺平社牛",  tagline:"社交满分，躺平至上", desc:"社交满分，躺平至上。能不出门绝不出门，能躺着绝不坐着。但一个电话来，你又在派对了。你是矛盾的综合体，但自洽得很。", traits:[{t:"社牛",c:"#FF9F1C"},{t:"躺平",c:"#6366F1"},{t:"反差感",c:"#00BCD4"},{t:"自洽",c:"#7C3AED"}], compat:[{icon:"🌀",name:"卷王",type:"ESTPA"},{icon:"🎭",name:"表演型",type:"ESNFA"}], dimScores:[82,30,12,15,18,93,88,15] },
+  "EITPA": { name:"独狼卷",    tagline:"一个人卷，安静地卷", desc:"一个人卷，安静地卷。你不需要观众，卷是为了自己。孤独是你最好的充电方式，沉默是你最强的武器。", traits:[{t:"独狼",c:"#8B5CF6"},{t:"内卷",c:"#A855F7"},{t:"专注",c:"#6366F1"},{t:"独立",c:"#7C3AED"}], compat:[{icon:"🎉",name:"热闹型",type:"ESNFA"},{icon:"🤝",name:"配合型",type:"ISFTC"}], dimScores:[25,70,68,75,88,20,50,92] },
+  "EITPC": { name:"硬刚独狼",  tagline:"不需要队友", desc:"不需要队友，不需要建议。遇到问题一个人扛，扛不住就硬刚。你是孤岛上的战斗机，独立自主的代名词。", traits:[{t:"独狼",c:"#8B5CF6"},{t:"硬刚",c:"#FF2D55"},{t:"独立",c:"#6366F1"},{t:"固执",c:"#DC2626"}], compat:[{icon:"🦋",name:"温柔型",type:"ISNFA"},{icon:"🧘",name:"佛系",type:"INFLC"}], dimScores:[22,65,72,82,94,15,28,88] },
+  "EITFA": { name:"独行乐",    tagline:"一个人也能很开心", desc:"一个人也能很开心？你就是答案。不依赖外界，自身就是快乐源泉。独处时你最强大，也最自在。", traits:[{t:"独行",c:"#10B981"},{t:"自洽",c:"#22C55E"},{t:"独立",c:"#06B6D4"},{t:"自由",c:"#14B8A6"}], compat:[{icon:"🦋",name:"蝴蝶型",type:"ISNFA"},{icon:"☀️",name:"阳光型",type:"ESNFA"}], dimScores:[20,68,22,70,30,18,85,60] },
+  "EITFC": { name:"独行侠",    tagline:"低质量社交不如没有", desc:"低质量社交不如没有，你信奉精英社交。朋友不在多，在于懂你。你是独行侠，大隐隐于市的那种。", traits:[{t:"独行",c:"#8B5CF6"},{t:"高冷",c:"#6366F1"},{t:"精英社交",c:"#7C3AED"},{t:"挑剔",c:"#A855F7"}], compat:[{icon:"🎉",name:"E人",type:"ESNPA"},{icon:"🤝",name:"SHI",type:"ISFTC"}], dimScores:[18,72,65,78,75,12,65,72] },
+  "ENNPA": { name:"社交元人",  tagline:"人设包装大师", desc:"人设包装大师，朋友圈经营专家。你的每条动态都是精心策划，每张照片都价值连城。影响力是你追求的货币。", traits:[{t:"大V",c:"#F59E0B"},{t:"人设",c:"#FF9F1C"},{t:"影响力",c:"#EF4444"},{t:"表演",c:"#E91E8C"}], compat:[{icon:"🦇",name:"独行型",type:"EITFC"},{icon:"👁️",name:"观察型",type:"INTFC"}], dimScores:[92,55,55,60,70,95,45,65] },
+  "ENNPC": { name:"键盘侠",    tagline:"网上重拳出击", desc:"网上重拳出击，线下岁月静好。你的键盘是你的武器，你的屏幕是你的战场。义正言辞是你战斗的姿态。", traits:[{t:"键盘侠",c:"#B91C1C"},{t:"键政",c:"#EF4444"},{t:"战斗欲",c:"#DC2626"},{t:"线下静",c:"#7C3AED"}], compat:[{icon:"🤝",name:"和事佬",type:"ESNFC"},{icon:"🧊",name:"冷面型",type:"EITPC"}], dimScores:[60,75,80,55,95,70,25,70] },
+  "ENNFA": { name:"社牛乐观",  tagline:"永远正能量", desc:"永远正能量，永远笑嘻嘻。悲观这种情绪跟你没关系，天塌下来有乐观顶着，你是朋友圈的人形暖宝宝。", traits:[{t:"乐观",c:"#FFD93D"},{t:"社牛",c:"#FF9F1C"},{t:"正能量",c:"#22C55E"},{t:"温暖",c:"#14B8A6"}], compat:[{icon:"🖤",name:"丧系",type:"INTFC"},{icon:"🦇",name:"暗黑型",type:"ENNPC"}], dimScores:[90,40,15,45,20,95,98,35] },
+  "ENNFC": { name:"人间清醒",  tagline:"社交懒，低欲望", desc:"社交懒，低欲望，看透一切。你的心态稳如老狗，不争不抢不焦虑。人间清醒就是你的人生标签。", traits:[{t:"清醒",c:"#64748B"},{t:"淡定",c:"#475569"},{t:"低欲望",c:"#6366F1"},{t:"通透",c:"#8B5CF6"}], compat:[{icon:"⚡",name:"战斗型",type:"ENNPC"},{icon:"🔥",name:"卷王型",type:"ESTPA"}], dimScores:[55,80,60,25,35,60,92,30] },
+  "ISTPA": { name:"老黄牛",    tagline:"埋头干活不说话", desc:"埋头干活不说话，卷是默默卷。你不求关注，只求结果。别人不知道你在卷，但成果说明一切。", traits:[{t:"老黄牛",c:"#84CC16"},{t:"靠谱",c:"#22C55E"},{t:"低调",c:"#0EA5E9"},{t:"执行强",c:"#14B8A6"}], compat:[{icon:"🦄",name:"理想型",type:"INTFA"},{icon:"🎭",name:"舞台型",type:"ENNPA"}], dimScores:[15,60,65,88,85,20,55,90] },
+  "ISTPC": { name:"守望者",    tagline:"默默守护稳稳输出", desc:"默默守护稳稳输出，你是那个永远靠谱的人。不说硬话，不做软事，但关键时刻从不缺席。", traits:[{t:"守护",c:"#0EA5E9"},{t:"靠谱",c:"#22C55E"},{t:"稳定",c:"#06B6D4"},{t:"低调",c:"#14B8A6"}], compat:[{icon:"🦋",name:"自由型",type:"EITFA"},{icon:"☀️",name:"阳光型",type:"ESNFA"}], dimScores:[12,58,68,90,88,15,48,85] },
+  "ISTFA": { name:"内卷乐",    tagline:"卷并快乐着", desc:"卷并快乐着，这是你的超能力。别人卷是痛苦，你卷是享受。你是那种让同事感到压力的卷王（褒义）。", traits:[{t:"内卷",c:"#84CC16"},{t:"快乐",c:"#22C55E"},{t:"自驱",c:"#10B981"},{t:"高效",c:"#0EA5E9"}], compat:[{icon:"🧊",name:"淡定型",type:"INFLC"},{icon:"🦇",name:"暗黑型",type:"ENNPC"}], dimScores:[18,55,20,85,80,22,82,88] },
+  "ISTFC": { name:"独行躺王",  tagline:"表面躺实际卷", desc:"表面躺实际卷，你是隐藏王者。看起来与世无争，背地里疯狂努力。你是卷王中的伪装者。", traits:[{t:"伪装",c:"#7C3AED"},{t:"躺王",c:"#6366F1"},{t:"隐藏卷",c:"#8B5CF6"},{t:"反差",c:"#A855F7"}], compat:[{icon:"🔥",name:"战斗型",type:"ESTPC"},{icon:"🤝",name:"SHI",type:"ENNPC"}], dimScores:[15,50,15,20,75,18,75,85] },
+  "ISNPA": { name:"策划人",    tagline:"暗中观察谋划一切", desc:"暗中观察谋划一切，你是朋友圈的军师。不出手则已，出手就是王炸。思想是你最锋利的武器。", traits:[{t:"策划",c:"#F97316"},{t:"谋士",c:"#EA580C"},{t:"洞察",c:"#DC2626"},{t:"幕后",c:"#9333EA"}], compat:[{icon:"🎯",name:"执行型",type:"ISTPA"},{icon:"🤝",name:"配合型",type:"ESNPC"}], dimScores:[20,88,62,75,72,25,55,70] },
+  "ISNPC": { name:"冷面刚",    tagline:"社恐但硬刚", desc:"社恐但硬刚，不鸣则已一鸣惊人。你不是不会社交，只是不想社交。真到关键时刻，你是那个站出来的人。", traits:[{t:"冷面",c:"#1D4ED8"},{t:"硬刚",c:"#2563EB"},{t:"社恐",c:"#3B82F6"},{t:"关键时刻",c:"#DC2626"}], compat:[{icon:"🔥",name:"热情型",type:"ESNPC"},{icon:"🦋",name:"温柔型",type:"ISNFA"}], dimScores:[15,78,75,80,92,10,35,80] },
+  "ISNFA": { name:"独处达人",  tagline:"独处且快乐", desc:"独处且快乐，孤独是你的好朋友。一个人吃饭旅行到处走停停，你是自己最好的陪伴。", traits:[{t:"独处",c:"#06B6D4"},{t:"自洽",c:"#14B8A6"},{t:"自由",c:"#10B981"},{t:"独立",c:"#22C55E"}], compat:[{icon:"🦄",name:"合群型",type:"ESNFA"},{icon:"🎭",name:"舞台型",type:"ENNPA"}], dimScores:[10,72,18,65,25,8,90,55] },
+  "INFLC": { name:"淡定王者",  tagline:"什么都与我无关", desc:"什么都与我无关，你是最淡定的人。大事小事在你眼里都是小事，天塌不塌先看有没有砸到我。", traits:[{t:"淡定",c:"#475569"},{t:"冷漠",c:"#64748B"},{t:"稳定",c:"#6366F1"},{t:"抽离",c:"#7C3AED"}], compat:[{icon:"🔥",name:"战斗型",type:"ESTPC"},{icon:"🤝",name:"热情型",type:"ESNPC"}], dimScores:[8,82,55,18,15,5,88,25] },
+  "INTPA": { name:"卷神",      tagline:"最高级的卷", desc:"最高级的卷，卷到无怨无悔。你是那种让猎头都头疼的人才，因为没有合适的职位能跟上你的节奏。", traits:[{t:"卷神",c:"#DC2626"},{t:"极致",c:"#EF4444"},{t:"高目标",c:"#F59E0B"},{t:"自驱",c:"#FF2D55"}], compat:[{icon:"🧘",name:"佛系型",type:"ISTFC"},{icon:"🦋",name:"躺平型",type:"ESNFC"}], dimScores:[20,75,70,90,85,18,40,98] },
+  "INTPC": { name:"思想钢印",  tagline:"我认为对的就是对的", desc:"我认为对的就是对的，这是你的信条。信念坚定不动摇，你是行走的价值观，所见之处皆是你的领地。", traits:[{t:"固执",c:"#9333EA"},{t:"信念",c:"#A855F7"},{t:"坚定",c:"#7C3AED"},{t:"原则",c:"#6366F1"}], compat:[{icon:"🤝",name:"灵活型",type:"ESNFC"},{icon:"🎭",name:"适应型",type:"ESNFA"}], dimScores:[18,80,82,88,90,12,22,82] },
+  "INTFA": { name:"理想主义者",tagline:"内心戏很多", desc:"内心戏很多，理想很丰满。你活在自己构建的完美世界里，并为此默默努力。理想主义是你的翅膀。", traits:[{t:"理想",c:"#0D9488"},{t:"内戏",c:"#06B6D4"},{t:"浪漫",c:"#14B8A6"},{t:"纯粹",c:"#22C55E"}], compat:[{icon:"😶",name:"现实型",c:"ISTPC"},{icon:"💀",name:"落地型",c:"ISTFC"}], dimScores:[22,90,20,70,40,22,88,55] },
+  "INTFC": { name:"摆烂大师",  tagline:"想卷但躺着更舒服", desc:"想卷但躺着更舒服，这是你的人生。明日复明日，明日还明日。你是摆烂界的大师，领军人物。", traits:[{t:"摆烂",c:"#78716C"},{t:"拖延",c:"#A8A29E"},{t:"自洽",c:"#57534E"},{t:"淡定",c:"#78716C"}], compat:[{icon:"⚡",name:"行动型",type:"ESTPA"},{icon:"🔥",name:"战斗型",type:"ESTPC"}], dimScores:[20,70,18,10,12,25,80,20] },
+  "INNPA": { name:"大V",       tagline:"影响力玩家", desc:"影响力玩家，粉丝就是力量。你深谙传播之道，每一条内容都是精心计算。网红经济，你是最认真的玩家。", traits:[{t:"大V",c:"#DB2777"},{t:"影响力",c:"#E91E8C"},{t:"网红",c:"#F472B6"},{t:"流量",c:"#FB7185"}], compat:[{icon:"🦇",name:"低调型",type:"EITFC"},{icon:"🤐",name:"社恐型",type:"ISNFC"}], dimScores:[65,85,50,45,65,70,55,60] },
+  "INNPC": { name:"互联网嘴替",tagline:"你想说的正是大家想说的", desc:"专业嘴替，你想说的正是大家想说而不敢说的。你的评论区永远比正文精彩，你是互联网嘴替第一人。", traits:[{t:"嘴替",c:"#9D174D"},{t:"敢说",c:"#BE185D"},{t:"尖锐",c:"#DB2777"},{t:"真实",c:"#E91E8C"}], compat:[{icon:"🧊",name:"冷面型",c:"ISNPC"},{icon:"🤝",name:"和事型",c:"ESNFC"}], dimScores:[45,88,75,40,88,55,35,55] },
+  "INNFA": { name:"彩虹屁",    tagline:"自我感觉超级好", desc:"自我感觉超级好，你是自己的第一粉丝。自信爆棚的你，每一天都在给自己打气。自信是最好的医美。", traits:[{t:"自信",c:"#EA580C"},{t:"彩虹屁",c:"#F97316"},{t:"自恋",c:"#FB923C"},{t:"乐观",c:"#FDBA74"}], compat:[{icon:"🥲",name:"自卑型",c:"INTFC"},{icon:"🤐",name:"社恐型",c:"ISNFC"}], dimScores:[60,72,10,50,15,65,95,40] },
+  "INNFC": { name:"互联网隐士",tagline:"我不想理你", desc:"我不想理你，也不想跟你解释。低质量社交是我最讨厌的事。你是互联网里的隐士，爱看不看。", traits:[{t:"隐士",c:"#475569"},{t:"高冷",c:"#64748B"},{t:"独立",c:"#6B7280"},{t:"淡漠",c:"#9CA3AF"}], compat:[{icon:"🔥",name:"战斗型",type:"ENNPC"},{icon:"🤝",name:"热情型",type:"ESNPC"}], dimScores:[12,90,58,8,10,5,75,15] },
 };
 
-const DIM_LABELS = [
-  ["输出型", "囤积型"],
-  ["社牛", "社恐"],
-  ["乐观怪", "焦虑怪"],
-  ["卷王", "躺平师"],
-  ["硬刚", "摆烂"]
-];
-
 // ===== STATE =====
-let answers = [];
+let answers = []; // array of 'A' or 'B'
 let curQ = 0;
 
-// ===== INIT =====
 document.getElementById('startBtn').addEventListener('click', startTest);
 document.getElementById('shareBtn').addEventListener('click', shareResult);
 document.getElementById('replayBtn').addEventListener('click', () => location.reload());
 
 function startTest() {
-  answers = [];
-  curQ = 0;
-  document.getElementById('start-screen').style.display = 'none';
-  document.getElementById('question-screen').style.display = 'block';
-  showQuestion();
+  answers = []; curQ = 0;
+  document.getElementById('start-screen').classList.remove('active');
+  document.getElementById('question-screen').classList.add('active');
+  showQ();
 }
 
-function showQuestion() {
-  const q = QUESTIONS[curQ];
+function showQ() {
+  const q = QS[curQ];
+  const dim = DIMS[q.d];
   document.getElementById('qNum').textContent = curQ + 1;
-  document.getElementById('progressFill').style.width = ((curQ + 1) / 5 * 100) + '%';
-  document.getElementById('questionText').textContent = q.text;
-
-  const optsEl = document.getElementById('options');
+  document.getElementById('dimLabel').textContent = dim.name;
+  document.getElementById('progFill').style.width = ((curQ + 1) / QS.length * 100).toFixed(2) + '%';
+  document.getElementById('qText').textContent = q.q;
+  const optsEl = document.getElementById('qOpts');
   optsEl.innerHTML = '';
-  q.opts.forEach((opt, i) => {
+  q.a.forEach((opt, i) => {
     const btn = document.createElement('button');
-    btn.className = 'option-btn';
-    btn.innerHTML = `<span class="option-letter">${opt.letter}</span><span>${opt.label}</span>`;
-    btn.addEventListener('click', () => pickAnswer(opt.value));
+    btn.className = 'q-opt';
+    btn.innerHTML = `<span class="q-opt-letter">${opt.l}</span><span>${opt.t}</span>`;
+    btn.addEventListener('click', () => pick(i));
     optsEl.appendChild(btn);
   });
-
-  // Re-trigger animation
-  const card = document.getElementById('questionCard');
-  card.style.animation = 'none';
-  card.offsetHeight;
-  card.style.animation = 'slideIn 0.35s ease';
+  // animate
+  const card = document.getElementById('qCard');
+  card.style.animation = 'none'; card.offsetHeight; card.style.animation = 'slideIn 0.3s ease';
 }
 
-function pickAnswer(val) {
-  answers.push(val);
+function pick(idx) {
+  answers.push(idx === 0 ? 'A' : 'B');
   curQ++;
-  if (curQ < QUESTIONS.length) {
-    showQuestion();
+  if (curQ < QS.length) {
+    showQ();
   } else {
     showResult();
   }
 }
 
+function calcType() {
+  // Count per dimension (6 questions each)
+  // D0-EI, D1-SN, D2-TF, D3-JP, D4-AC, D5-SN2, D6-OA, D7-HL
+  const dimScores = [0,0,0,0,0,0,0,0];
+  QS.forEach((q, i) => {
+    dimScores[q.d] += answers[i] === 'A' ? 1 : 0;
+  });
+  // Convert to letter
+  const letters = [
+    dimScores[0] > 3 ? 'E' : 'I',
+    dimScores[1] > 3 ? 'S' : 'N',
+    dimScores[2] > 3 ? 'T' : 'F',
+    dimScores[3] > 3 ? 'J' : 'P',
+    dimScores[4] > 3 ? 'A' : 'C',
+  ];
+  return { key: letters.join(''), dimScores };
+}
+
 function showResult() {
-  document.getElementById('question-screen').style.display = 'none';
-  document.getElementById('result-screen').style.display = 'block';
+  document.getElementById('question-screen').classList.remove('active');
+  document.getElementById('result-screen').classList.add('active');
+  const { key, dimScores } = calcType();
+  const t = TYPES[key] || TYPES["INTFC"];
 
-  const key = answers.join('');
-  const t = TYPES[key] || TYPES["JNFC"]; // fallback
+  document.getElementById('resBadge').textContent = t.traits[0].t;
+  document.getElementById('resName').textContent = t.name;
+  document.getElementById('resTagline').textContent = t.tagline;
+  document.getElementById('resDesc').textContent = t.desc;
 
-  document.getElementById('resultType').textContent = t.code;
-  document.getElementById('resultName').textContent = t.name;
-  document.getElementById('resultDesc').textContent = t.desc;
+  // Chips
+  const chipsEl = document.getElementById('resChips');
+  chipsEl.innerHTML = t.traits.map(tr => `<span class="trait-chip" style="color:${tr.c};border-color:${tr.c}">${tr.t}</span>`).join('');
 
-  // Dimension bars
-  const barsEl = document.getElementById('dimBars');
-  barsEl.innerHTML = '';
-  answers.forEach((a, i) => {
-    const isA = a === QUESTIONS[i].opts[0].value;
-    const pct = isA ? 65 + Math.random() * 30 : 35 + Math.random() * 30;
-    const wrap = document.createElement('div');
-    wrap.className = 'dim-bar-wrap';
-    wrap.innerHTML = `
-      <div class="dim-bar-label">
-        <span>${isA ? DIM_LABELS[i][0] : DIM_LABELS[i][1]}</span>
-        <span>${Math.round(pct)}%</span>
+  // 15 dims (show all 8 with A/B labels)
+  const dimsGrid = document.getElementById('dimsGrid');
+  dimsGrid.innerHTML = '';
+  DIMS.forEach((dim, i) => {
+    const score = Math.round(dimScores[i] / 6 * 100);
+    const isA = score >= 50;
+    const leftPct = isA ? score : 100 - score;
+    const rightPct = isA ? 100 - score : score;
+    const col = DIM_COLORS[i % DIM_COLORS.length];
+    dimsGrid.innerHTML += `
+      <div class="dim-item">
+        <div class="dim-name">${isA ? dim.dimA : dim.dimB}<span>${score}%</span></div>
+        <div class="dim-track"><div class="dim-fill" style="width:0%;background:${col}"></div></div>
       </div>
-      <div class="dim-bar">
-        <div class="dim-bar-fill" style="width:0%;background:${isA ? t.color : '#00D4FF'}"></div>
+      <div class="dim-sep"></div>
+      <div class="dim-item">
+        <div class="dim-name" style="justify-content:flex-end">${isA ? dim.dimB : dim.dimA}<span>${100-score}%</span></div>
+        <div class="dim-track"><div class="dim-fill" style="width:0%;background:#333"></div></div>
       </div>
     `;
-    barsEl.appendChild(wrap);
-    // Animate
-    setTimeout(() => {
-      wrap.querySelector('.dim-bar-fill').style.width = pct + '%';
-    }, 100 + i * 100);
   });
+
+  // Compat
+  const compatEl = document.getElementById('compatList');
+  compatEl.innerHTML = t.compat.map(c => `
+    <div class="compat-item">
+      <span class="compat-icon">${c.icon}</span>
+      <span class="compat-type">${c.name}</span>
+      <span style="color:var(--text-dim)">${c.type}</span>
+    </div>
+  `).join('');
+
+  // Animate dims after a tick
+  setTimeout(() => {
+    dimsGrid.querySelectorAll('.dim-fill').forEach((el, i) => {
+      const dimIdx = Math.floor(i / 2);
+      const score = Math.round(dimScores[dimIdx] / 6 * 100);
+      const isLeft = i % 2 === 0;
+      const pct = isLeft ? (DIMS[dimIdx] ? (score >= 50 ? score : 100-score : 50) : 50) : (DIMS[Math.floor(i/2)] ? (score >= 50 ? 100-score : score) : 50);
+      el.style.width = pct + '%';
+    });
+  }, 100);
 }
 
 function shareResult() {
-  const t = TYPES[answers.join('')] || TYPES["JNFC"];
-  const text = `我的赛博人格：【${t.code} ${t.name}】\n${t.desc}\n\n#赛博人格测试 #SBTI\nsbti-test`;
+  const { key } = calcType();
+  const t = TYPES[key] || TYPES["INTFC"];
+  const text = `我的赛博人格：【${key} · ${t.name}】\n"${t.tagline}"\n${t.desc}\n\n#赛博人格测试 #SBTI\nhttps://caoxianhuang-creator.github.io/sbti/`;
   if (navigator.clipboard) {
     navigator.clipboard.writeText(text).then(() => {
       const btn = document.getElementById('shareBtn');
       btn.textContent = '✅ 已复制！快去粘贴';
-      setTimeout(() => { btn.textContent = '📤 复制结果发给好友'; }, 2000);
+      setTimeout(() => { btn.textContent = '📤 复制结果发给好友'; }, 2500);
     });
   } else {
     prompt('复制这段文字：', text);
